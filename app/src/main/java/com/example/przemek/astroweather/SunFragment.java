@@ -7,6 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.astrocalculator.AstroCalculator;
+import com.astrocalculator.AstroDateTime;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 
 /**
@@ -57,8 +64,32 @@ public class SunFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sun, container, false);
+        View v = inflater.inflate(R.layout.fragment_sun, container, false);
+        updateInfo(v);
+        return v;
+    }
+
+    public void updateInfo(View v){
+        SettingsStorage settingsStorage = SettingsStorage.getInstance();
+        AstroCalculator.Location astroLocation = new AstroCalculator.Location(
+                settingsStorage.getLatitude(),
+                settingsStorage.getLongitude());
+
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow();
+        AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
+        AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
+
+        EditText et_sunrise = (EditText) v.findViewById(R.id.et_sunrise);
+        et_sunrise.setText(AstroDateCalendarParser.getDateTime(sunInfo.getSunrise()) + " " + String.valueOf(sunInfo.getAzimuthRise()));
+
+        EditText et_sunset = (EditText) v.findViewById(R.id.et_sunset);
+        et_sunset.setText(AstroDateCalendarParser.getDateTime(sunInfo.getSunset()) + " " + String.valueOf(sunInfo.getAzimuthSet()));
+
+        EditText et_dusk = (EditText) v.findViewById(R.id.et_dusk);
+        et_dusk.setText(AstroDateCalendarParser.getDateTime(sunInfo.getTwilightEvening()));
+
+        EditText et_civil_dawn = (EditText) v.findViewById(R.id.et_civil_dawn);
+        et_civil_dawn.setText(AstroDateCalendarParser.getDateTime(sunInfo.getTwilightMorning()));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

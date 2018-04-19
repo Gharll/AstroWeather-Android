@@ -7,6 +7,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.astrocalculator.AstroCalculator;
+import com.astrocalculator.AstroDateTime;
+
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -53,7 +64,40 @@ public class MoonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_moon, container, false);
+
+
+
+        View v = inflater.inflate(R.layout.fragment_moon, container, false);
+        updateInfo(v);
+        return v;
+    }
+
+    public void updateInfo(View v){
+        SettingsStorage settingsStorage = SettingsStorage.getInstance();
+        AstroCalculator.Location astroLocation = new AstroCalculator.Location(
+                settingsStorage.getLatitude(),
+                settingsStorage.getLongitude()
+        );
+
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow();
+        AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
+        AstroCalculator.MoonInfo moonInfo = astroCalculator.getMoonInfo();
+
+        EditText et_moonrise = (EditText) v.findViewById(R.id.et_moonrise);
+        et_moonrise.setText(AstroDateCalendarParser.getDateTime(moonInfo.getMoonrise()));
+
+        EditText et_moonset = (EditText) v.findViewById(R.id.et_moonset);
+        et_moonset.setText(AstroDateCalendarParser.getDateTime(moonInfo.getMoonset()));
+
+        EditText et_fullmoon = (EditText) v.findViewById(R.id.et_full_moon);
+        et_fullmoon.setText(AstroDateCalendarParser.getDateTime(moonInfo.getNextFullMoon()));
+
+        EditText et_lunar_phase = (EditText) v.findViewById(R.id.et_lunar_phase);
+        NumberFormat formatter = new DecimalFormat("#0.0000");
+
+        String lunarPhasePercent =
+                formatter.format(moonInfo.getIllumination());
+        et_lunar_phase.setText(lunarPhasePercent);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

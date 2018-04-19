@@ -8,8 +8,8 @@ import android.content.SharedPreferences;
 public class SettingsStorage {
 
     private static SettingsStorage settingsStorage = null;
-    private static Float longitude;
-    private static Float latitude;
+    private static double longitude;
+    private static double latitude;
     private static Integer dataFrequencyRefresh;
     //private TimeUnitEnum frequencyUnit = TimeUnitEnum.MINUTES;
 
@@ -19,8 +19,9 @@ public class SettingsStorage {
 
     public static SettingsStorage getInstance(){
         if(settingsStorage == null){
-            initDefaultData();
             settingsStorage = new SettingsStorage();
+            settingsStorage.setLatitude(51.7537150);
+            settingsStorage.setLongitude(19.4517180);
         }
         /*if(longitude == null || latitude == null || dataFrequencyRefresh == null){
             initDefaultData();
@@ -28,12 +29,6 @@ public class SettingsStorage {
             restoreData();
         }*/
         return settingsStorage;
-    }
-
-    private static void initDefaultData(){
-        longitude = 0f;
-        latitude = 0f;
-        dataFrequencyRefresh = 30;
     }
 
     /*private static void restoreData(){
@@ -44,19 +39,19 @@ public class SettingsStorage {
 
     }*/
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 

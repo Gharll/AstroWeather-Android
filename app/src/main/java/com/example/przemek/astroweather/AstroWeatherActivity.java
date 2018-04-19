@@ -25,7 +25,7 @@ public class AstroWeatherActivity extends AppCompatActivity
         if (!isTablet()) {
             pageInit();
         }
-        currentTimeInit();
+        currentTimeAndDataInit();
     }
 
     boolean isTablet(){
@@ -43,7 +43,7 @@ public class AstroWeatherActivity extends AppCompatActivity
 
     }
 
-    private void currentTimeInit() {
+    private void currentTimeAndDataInit() {
         new Thread() {
             @Override
             public void run() {
@@ -53,6 +53,7 @@ public class AstroWeatherActivity extends AppCompatActivity
                             @Override
                             public void run() {
                                 updateTime();
+                                updateDate();
                             }
                         });
                         Thread.sleep(1000);
@@ -70,6 +71,17 @@ public class AstroWeatherActivity extends AppCompatActivity
         String strTime = sdfTime.format(now);
         tvCurrentTime.setText(strTime);
     }
+
+    private void updateDate(){
+        Calendar calendar = Calendar.getInstance();
+
+        TextView tvCurrentDate = (TextView) findViewById(R.id.tv_current_date);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy/MM/dd");
+        Date now = new Date();
+        String strDate = sdfDate.format(now);
+        tvCurrentDate.setText(strDate);
+    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
