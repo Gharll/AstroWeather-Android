@@ -27,6 +27,9 @@ public class SunFragment extends Fragment {
     private int page;
     private String title;
 
+    public String getTitle(){
+        return title;
+    }
     private OnFragmentInteractionListener mListener;
 
     public SunFragment() {

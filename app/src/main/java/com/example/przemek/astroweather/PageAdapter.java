@@ -12,6 +12,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class PageAdapter extends FragmentPagerAdapter {
 
     private static int NUM_ITEMS = 2;
+    private Fragment currentFragment;
+    private String [] titles = {"Moon", "Sun"};
+
     public PageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
@@ -26,9 +29,9 @@ public class PageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MoonFragment.newInstance(1, "Moon");
+                return MoonFragment.newInstance(1, titles[0]);
             case 1:
-                return SunFragment.newInstance(1, "Sun");
+                return SunFragment.newInstance(2,  titles[1]);
             default:
                 return null;
         }
@@ -36,6 +39,6 @@ public class PageAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Page " + position;
+        return titles[position];
     }
 }
