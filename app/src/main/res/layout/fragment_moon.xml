@@ -25,10 +25,11 @@
                 android:id="@+id/et_moonrise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -47,10 +48,11 @@
                 android:id="@+id/et_moonset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -69,10 +71,11 @@
                 android:id="@+id/et_full_moon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -91,10 +94,11 @@
                 android:id="@+id/et_lunar_phase"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
 
         </TableRow>
@@ -115,10 +119,11 @@
                 android:id="@+id/et_day_of_lunar_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
