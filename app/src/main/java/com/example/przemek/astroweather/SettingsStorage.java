@@ -11,6 +11,10 @@ public class SettingsStorage {
     private static double longitude;
     private static double latitude;
     private static Integer dataFrequencyRefresh;
+    private static Integer timeZone;
+
+    public final int MIN_TIME_OFFSET = -12;
+    public final int MAX_TIME_OFFSET = 14;
     //private TimeUnitEnum frequencyUnit = TimeUnitEnum.MINUTES;
 
     private SettingsStorage(){
@@ -22,6 +26,8 @@ public class SettingsStorage {
             settingsStorage = new SettingsStorage();
             settingsStorage.setLatitude(51.7537150);
             settingsStorage.setLongitude(19.4517180);
+            settingsStorage.setDataFrequencyRefresh(30);
+            settingsStorage.setTimeZone(2);
         }
         /*if(longitude == null || latitude == null || dataFrequencyRefresh == null){
             initDefaultData();
@@ -63,11 +69,11 @@ public class SettingsStorage {
         this.dataFrequencyRefresh = dataFrequencyRefresh;
     }
 
-    /*public TimeUnitEnum getFrequencyUnit() {
-        return frequencyUnit;
+    public static Integer getTimeZone() {
+        return timeZone;
     }
 
-    public void setFrequencyUnit(TimeUnitEnum frequencyUnit) {
-        this.frequencyUnit = frequencyUnit;
-    }*/
+    public static void setTimeZone(Integer timeZone) {
+        SettingsStorage.timeZone = timeZone;
+    }
 }

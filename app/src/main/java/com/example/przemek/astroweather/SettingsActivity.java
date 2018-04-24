@@ -14,6 +14,7 @@ public class SettingsActivity extends AppCompatActivity {
     private EditText et_longitude;
     private EditText et_latitude;
     private EditText et_frequency;
+    private EditText et_time_zone_offset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
         et_frequency = (EditText) findViewById(R.id.et_frequency);
+        et_time_zone_offset = (EditText) findViewById(R.id.et_time_zone_offset);
     }
 
     private void saveAndExitHandle(){
@@ -41,6 +43,16 @@ public class SettingsActivity extends AppCompatActivity {
                         Float.parseFloat(et_latitude.getText().toString()));
                 settingsStorage.setDataFrequencyRefresh(
                         Integer.parseInt(et_frequency.getText().toString()));
+
+                int inputTimeOffset = Integer.parseInt(et_time_zone_offset.getText().toString());
+                if(inputTimeOffset > settingsStorage.MAX_TIME_OFFSET){
+                    inputTimeOffset = settingsStorage.MAX_TIME_OFFSET;
+                }
+                if(inputTimeOffset < settingsStorage.MIN_TIME_OFFSET){
+                    inputTimeOffset = settingsStorage.MIN_TIME_OFFSET;
+                }
+                settingsStorage.setTimeZone(inputTimeOffset);
+
                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));
             }
         });
@@ -50,5 +62,6 @@ public class SettingsActivity extends AppCompatActivity {
         et_longitude.setText(String.valueOf(settingsStorage.getLongitude()));
         et_latitude.setText(String.valueOf(settingsStorage.getLatitude()));
         et_frequency.setText(String.valueOf(settingsStorage.getDataFrequencyRefresh()));
+        et_time_zone_offset.setText(String.valueOf(settingsStorage.getTimeZone()));
     }
 }

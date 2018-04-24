@@ -79,7 +79,10 @@ public class MoonFragment extends Fragment {
                 settingsStorage.getLongitude()
         );
 
-        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow();
+        NumberFormat formatter = new DecimalFormat("#0.00");
+
+
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(settingsStorage.getTimeZone());
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.MoonInfo moonInfo = astroCalculator.getMoonInfo();
 
@@ -92,12 +95,16 @@ public class MoonFragment extends Fragment {
         EditText et_fullmoon = (EditText) v.findViewById(R.id.et_full_moon);
         et_fullmoon.setText(AstroDateCalendarParser.getDateTime(moonInfo.getNextFullMoon()));
 
+        EditText et_day_of_lunar_month = (EditText) v.findViewById(R.id.et_day_of_lunar_month);
+        et_day_of_lunar_month.setText(String.valueOf(
+                formatter.format(moonInfo.getAge() % 29.530588853 )));
+
         EditText et_lunar_phase = (EditText) v.findViewById(R.id.et_lunar_phase);
-        NumberFormat formatter = new DecimalFormat("#0.0000");
+
 
         String lunarPhasePercent =
-                formatter.format(moonInfo.getIllumination());
-        et_lunar_phase.setText(lunarPhasePercent);
+                formatter.format(moonInfo.getIllumination() * 100);
+        et_lunar_phase.setText(lunarPhasePercent + " %");
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -75,7 +75,7 @@ public class SunFragment extends Fragment {
                 settingsStorage.getLatitude(),
                 settingsStorage.getLongitude());
 
-        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow();
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(settingsStorage.getTimeZone());
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
 

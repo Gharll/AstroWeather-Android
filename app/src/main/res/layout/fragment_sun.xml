@@ -23,12 +23,13 @@
 
             <EditText
                 android:id="@+id/et_sunrise"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -47,10 +48,11 @@
                 android:id="@+id/et_sunset"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -69,10 +71,11 @@
                 android:id="@+id/et_dusk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine"
                 android:text="null" />
         </TableRow>
 
@@ -91,10 +94,11 @@
                 android:id="@+id/et_civil_dawn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:editable="false"
                 android:ems="10"
                 android:focusable="false"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine|textPersonName"
                 android:text="null" />
         </TableRow>
 
