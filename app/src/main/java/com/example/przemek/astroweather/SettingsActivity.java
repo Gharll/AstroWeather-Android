@@ -15,8 +15,6 @@ public class SettingsActivity extends AppCompatActivity {
     private SettingsStorage settingsStorage = SettingsStorage.getInstance();
     private EditText et_longitude;
     private EditText et_latitude;
-    /*private EditText et_frequency;
-    private EditText et_time_zone_offset;*/
     private Spinner frequencySpinner;
     private Spinner timeZoneSpinner;
 
@@ -36,14 +34,24 @@ public class SettingsActivity extends AppCompatActivity {
     private void init(){
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
-       //et_frequency = (EditText) findViewById(R.id.et_frequency);
-       // et_time_zone_offset = (EditText) findViewById(R.id.et_time_zone_offset);
+        initSpinner();
+    }
 
-
+    private void initSpinner(){
         String[] frequencyArraySpinner = new String[]{
                 "1", "5", "10", "30", "60"
         };
 
+        String[] timeZoneArraySpinner = initTimeZoneArraySpinner();
+
+        frequencyAdapter = initAdapter(frequencyArraySpinner);
+        frequencySpinner = initSpinner(R.id.spinner_frequency, frequencyArraySpinner);
+
+        timeZoneAdapter = initAdapter(timeZoneArraySpinner);
+        timeZoneSpinner = initSpinner(R.id.spinner_timezone, timeZoneArraySpinner);
+    }
+
+    private String[] initTimeZoneArraySpinner(){
         int size = settingsStorage.MAX_TIME_OFFSET - settingsStorage.MIN_TIME_OFFSET + 1;
         String[] timeZoneArraySpinner = new String[size];
         int index = 0;
@@ -51,14 +59,18 @@ public class SettingsActivity extends AppCompatActivity {
             timeZoneArraySpinner[index++] = String.valueOf(i);
         }
 
-        frequencySpinner = (Spinner) findViewById(R.id.spinner_frequency);
-        frequencyAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, frequencyArraySpinner);
-        frequencySpinner.setAdapter(frequencyAdapter);
+        return timeZoneArraySpinner;
+    }
 
-        timeZoneSpinner = (Spinner) findViewById(R.id.spinner_timezone);
-        timeZoneAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item, timeZoneArraySpinner);
-        timeZoneSpinner.setAdapter(timeZoneAdapter);
+    private ArrayAdapter<String> initAdapter(String[] arraySpinner){
+        return new ArrayAdapter<String>(this, R.layout.spinner_item, arraySpinner);
+    }
 
+    private Spinner initSpinner(int id, String[] arraySpinner){
+        ArrayAdapter<String> adapter = initAdapter(arraySpinner);
+        Spinner spinner = (Spinner) findViewById(id);
+        spinner.setAdapter(adapter);
+        return spinner;
     }
 
     private void saveAndExitHandle(){
@@ -74,12 +86,6 @@ public class SettingsActivity extends AppCompatActivity {
                         Integer.parseInt(frequencySpinner.getSelectedItem().toString()));
 
                 int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
-                if(inputTimeOffset > settingsStorage.MAX_TIME_OFFSET){
-                    inputTimeOffset = settingsStorage.MAX_TIME_OFFSET;
-                }
-                if(inputTimeOffset < settingsStorage.MIN_TIME_OFFSET){
-                    inputTimeOffset = settingsStorage.MIN_TIME_OFFSET;
-                }
                 settingsStorage.setTimeZone(inputTimeOffset);
 
                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));
@@ -90,10 +96,11 @@ public class SettingsActivity extends AppCompatActivity {
     private void showCurrentSettings(){
         et_longitude.setText(String.valueOf(settingsStorage.getLongitude()));
         et_latitude.setText(String.valueOf(settingsStorage.getLatitude()));
-        frequencySpinner.setSelection(frequencyAdapter.getPosition(String.valueOf(SettingsStorage.getDataFrequencyRefresh())));
-        timeZoneSpinner.setSelection(timeZoneAdapter.getPosition(String.valueOf(SettingsStorage.getTimeZone())));
-
-        //et_frequency.setText(String.valueOf(settingsStorage.getDataFrequencyRefresh()));
-//        et_time_zone_offset.setText(String.valueOf(settingsStorage.getTimeZone()));
+        frequencySpinner.setSelection(
+                frequencyAdapter.getPosition(
+                        String.valueOf(SettingsStorage.getDataFrequencyRefresh())));
+        timeZoneSpinner.setSelection(
+                timeZoneAdapter.getPosition(
+                        String.valueOf(SettingsStorage.getTimeZone())));
     }
 }
