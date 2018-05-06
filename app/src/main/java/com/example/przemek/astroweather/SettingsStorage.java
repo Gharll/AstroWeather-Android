@@ -26,7 +26,7 @@ public class SettingsStorage {
             settingsStorage = new SettingsStorage();
             settingsStorage.setLatitude(51.7537150);
             settingsStorage.setLongitude(19.4517180);
-            settingsStorage.setDataFrequencyRefresh(30);
+            settingsStorage.setDataFrequencyRefresh(1);
             settingsStorage.setTimeZone(2);
         }
         /*if(longitude == null || latitude == null || dataFrequencyRefresh == null){
@@ -45,28 +45,28 @@ public class SettingsStorage {
 
     }*/
 
-    public double getLongitude() {
+    public static double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public static void setLongitude(double longitude) {
+        SettingsStorage.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public static double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public static void setLatitude(double latitude) {
+        SettingsStorage.latitude = latitude;
     }
 
-    public int getDataFrequencyRefresh() {
+    public static int getDataFrequencyRefresh() {
         return dataFrequencyRefresh;
     }
 
-    public void setDataFrequencyRefresh(int dataFrequencyRefresh) {
-        this.dataFrequencyRefresh = dataFrequencyRefresh;
+    public static void setDataFrequencyRefresh(int dataFrequencyRefresh) {
+        SettingsStorage.dataFrequencyRefresh = dataFrequencyRefresh;
     }
 
     public static Integer getTimeZone() {

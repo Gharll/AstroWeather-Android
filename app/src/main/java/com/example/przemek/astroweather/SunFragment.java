@@ -3,11 +3,13 @@ package com.example.przemek.astroweather;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
@@ -61,10 +63,25 @@ public class SunFragment extends Fragment {
         }
     }
 
+    View mView;
+    final Handler refreshHandler = new Handler();
+    int i = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_sun, container, false);
+        mView = v;
+
+        final int seconds = SettingsStorage.getDataFrequencyRefresh();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateInfo(mView);
+                refreshHandler.postDelayed(this, seconds * 1000);
+            }
+        };
+        refreshHandler.postDelayed(runnable, seconds * 1000);
+
         updateInfo(v);
         return v;
     }

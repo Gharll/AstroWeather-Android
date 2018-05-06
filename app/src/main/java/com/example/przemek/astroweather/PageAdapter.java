@@ -12,11 +12,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class PageAdapter extends FragmentPagerAdapter {
 
     private static int NUM_ITEMS = 2;
-    private Fragment currentFragment;
     private String [] titles = {"Moon", "Sun"};
 
     public PageAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
+        fragmentInit();
+
+    }
+
+    public void fragmentInit(){
+            FragmentStorage.addFragment("moon", MoonFragment.newInstance(1, titles[0]));
+            FragmentStorage.addFragment("sun", SunFragment.newInstance(2, titles[1]));
     }
 
     @Override
@@ -29,9 +35,9 @@ public class PageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return MoonFragment.newInstance(1, titles[0]);
+                return FragmentStorage.getFragment("moon");
             case 1:
-                return SunFragment.newInstance(2,  titles[1]);
+                return FragmentStorage.getFragment("sun");
             default:
                 return null;
         }

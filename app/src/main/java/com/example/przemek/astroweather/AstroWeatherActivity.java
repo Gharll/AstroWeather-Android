@@ -3,18 +3,22 @@ package com.example.przemek.astroweather;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class AstroWeatherActivity extends AppCompatActivity
-        implements SunFragment.OnFragmentInteractionListener, MoonFragment.OnFragmentInteractionListener {
+        implements MoonFragment.OnFragmentInteractionListener, SunFragment.OnFragmentInteractionListener{
 
     FragmentPagerAdapter adapterViewPager;
 
@@ -26,6 +30,7 @@ public class AstroWeatherActivity extends AppCompatActivity
             pageInit();
         }
         currentTimeAndDataInit();
+
     }
 
     boolean isTablet(){
@@ -38,9 +43,14 @@ public class AstroWeatherActivity extends AppCompatActivity
         adapterViewPager = new PageAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
 
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(vpPager);
 
+    }
+
+    private static String makeFragmentName(int viewId, long id) {
+        return "android:switcher:" + viewId + ":" + id;
     }
 
     private void currentTimeAndDataInit() {
@@ -87,4 +97,5 @@ public class AstroWeatherActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }
