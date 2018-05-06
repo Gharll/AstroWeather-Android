@@ -24,26 +24,15 @@ public class SettingsStorage {
     public static SettingsStorage getInstance(){
         if(settingsStorage == null){
             settingsStorage = new SettingsStorage();
+
             settingsStorage.setLatitude(51.7537150);
             settingsStorage.setLongitude(19.4517180);
             settingsStorage.setDataFrequencyRefresh(1);
             settingsStorage.setTimeZone(2);
         }
-        /*if(longitude == null || latitude == null || dataFrequencyRefresh == null){
-            initDefaultData();
-        } else {
-            restoreData();
-        }*/
         return settingsStorage;
     }
 
-    /*private static void restoreData(){
-
-    }*/
-
-    /*private void saveData(){
-
-    }*/
 
     public static double getLongitude() {
         return longitude;

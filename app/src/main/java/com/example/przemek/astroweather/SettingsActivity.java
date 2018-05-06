@@ -1,6 +1,7 @@
 package com.example.przemek.astroweather;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,13 +20,21 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner timeZoneSpinner;
 
 
+    SharedPreferences mPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         init();
         saveAndExitHandle();
+
+        mPrefs = getSharedPreferences("settings", 0);
+        restoreData();
         showCurrentSettings();
+
+
+
     }
 
     ArrayAdapter<String> frequencyAdapter;
@@ -89,6 +98,8 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsStorage.setTimeZone(inputTimeOffset);
 
                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+
+                saveData();
             }
         });
     }
@@ -102,5 +113,22 @@ public class SettingsActivity extends AppCompatActivity {
         timeZoneSpinner.setSelection(
                 timeZoneAdapter.getPosition(
                         String.valueOf(SettingsStorage.getTimeZone())));
+    }
+
+
+    private void restoreData(){
+        SettingsStorage.setLongitude(Double.parseDouble(mPrefs.getString("longitude", "404")));
+        SettingsStorage.setLatitude(Double.parseDouble(mPrefs.getString("latitude", "404")));
+
+        SettingsStorage.setTimeZone(mPrefs.getInt("time_zone", 4));
+        SettingsStorage.setDataFrequencyRefresh(mPrefs.getInt("refresh", 4));
+    }
+
+    private void saveData(){
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString("longitude", String.valueOf(SettingsStorage.getLongitude())).commit();
+        mEditor.putString("latitude", String.valueOf(SettingsStorage.getLatitude())).commit();
+        mEditor.putInt("time_zone", SettingsStorage.getTimeZone()).commit();
+        mEditor.putInt("refresh", SettingsStorage.getDataFrequencyRefresh()).commit();
     }
 }

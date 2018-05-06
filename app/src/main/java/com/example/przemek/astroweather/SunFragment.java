@@ -65,7 +65,6 @@ public class SunFragment extends Fragment {
 
     View mView;
     final Handler refreshHandler = new Handler();
-    int i = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,11 +95,16 @@ public class SunFragment extends Fragment {
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
 
+        DecimalFormat azimuthFormatter = new DecimalFormat("#.##");
+        final String DEGREE  = "\u00b0";
+
         EditText et_sunrise = (EditText) v.findViewById(R.id.et_sunrise);
-        et_sunrise.setText(AstroDateCalendarParser.getDateTime(sunInfo.getSunrise()) + " " + String.valueOf(sunInfo.getAzimuthRise()));
+        et_sunrise.setText("(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunrise()) + ") "
+                + azimuthFormatter.format(sunInfo.getAzimuthRise()) + DEGREE);
 
         EditText et_sunset = (EditText) v.findViewById(R.id.et_sunset);
-        et_sunset.setText(AstroDateCalendarParser.getDateTime(sunInfo.getSunset()) + " " + String.valueOf(sunInfo.getAzimuthSet()));
+        et_sunset.setText("(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunset()) + ") "
+                + azimuthFormatter.format(sunInfo.getAzimuthSet()) + DEGREE);
 
         EditText et_dusk = (EditText) v.findViewById(R.id.et_dusk);
         et_dusk.setText(AstroDateCalendarParser.getDateTime(sunInfo.getTwilightEvening()));
