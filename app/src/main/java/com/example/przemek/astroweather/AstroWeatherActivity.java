@@ -30,7 +30,7 @@ public class AstroWeatherActivity extends AppCompatActivity
         if(isLandscape()) {
             setContentView(R.layout.astro_weather_landscape);
         }
-        
+
         if (!isTablet()) {
             pageInit();
         }
