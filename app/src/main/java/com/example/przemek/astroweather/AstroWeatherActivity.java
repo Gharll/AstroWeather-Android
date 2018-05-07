@@ -3,15 +3,11 @@ package com.example.przemek.astroweather;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,12 +21,30 @@ public class AstroWeatherActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.astro_weather);
+
+
+        if(isPortrait()){
+            setContentView(R.layout.astro_weather_portrait);
+        }
+
+        if(isLandscape()) {
+            setContentView(R.layout.astro_weather_landscape);
+        }
+        
         if (!isTablet()) {
             pageInit();
         }
+
         currentTimeAndDataInit();
 
+    }
+
+    boolean isPortrait(){
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    boolean isLandscape(){
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     boolean isTablet(){
@@ -76,22 +90,23 @@ public class AstroWeatherActivity extends AppCompatActivity
 
     private void updateTime() {
         TextView tvCurrentTime = (TextView) findViewById(R.id.tv_current_time);
-        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
-        Date now = new Date();
-        String strTime = sdfTime.format(now);
-        tvCurrentTime.setText(strTime);
+        tvCurrentTime.setText(getStrDate("HH:mm:ss"));
     }
 
     private void updateDate(){
-        Calendar calendar = Calendar.getInstance();
-
         TextView tvCurrentDate = (TextView) findViewById(R.id.tv_current_date);
-        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy/MM/dd");
-        Date now = new Date();
-        String strDate = sdfDate.format(now);
-        tvCurrentDate.setText(strDate);
+        tvCurrentDate.setText(getStrDate("yyyy/MM/dd"));
     }
 
+    private String getStrDate(String pattern){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdfDate = new SimpleDateFormat(pattern);
+        Date now = new Date();
+        calendar.setTime(now);
+        calendar.add(Calendar.HOUR, SettingsStorage.getTimeZone());
+
+        return sdfDate.format(calendar.getTime());
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

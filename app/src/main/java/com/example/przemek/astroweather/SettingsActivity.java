@@ -32,9 +32,6 @@ public class SettingsActivity extends AppCompatActivity {
         mPrefs = getSharedPreferences("settings", 0);
         restoreData();
         showCurrentSettings();
-
-
-
     }
 
     ArrayAdapter<String> frequencyAdapter;

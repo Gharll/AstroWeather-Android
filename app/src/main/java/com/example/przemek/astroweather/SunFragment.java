@@ -86,12 +86,11 @@ public class SunFragment extends Fragment {
     }
 
     public void updateInfo(View v){
-        SettingsStorage settingsStorage = SettingsStorage.getInstance();
         AstroCalculator.Location astroLocation = new AstroCalculator.Location(
-                settingsStorage.getLatitude(),
-                settingsStorage.getLongitude());
+                SettingsStorage.getLatitude(),
+                SettingsStorage.getLongitude());
 
-        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(settingsStorage.getTimeZone());
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(SettingsStorage.getTimeZone());
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
 
@@ -99,12 +98,14 @@ public class SunFragment extends Fragment {
         final String DEGREE  = "\u00b0";
 
         EditText et_sunrise = (EditText) v.findViewById(R.id.et_sunrise);
-        et_sunrise.setText("(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunrise()) + ") "
-                + azimuthFormatter.format(sunInfo.getAzimuthRise()) + DEGREE);
+        String sunriseText = "(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunrise()) + ") "
+                + azimuthFormatter.format(sunInfo.getAzimuthRise()) + DEGREE;
+        et_sunrise.setText(sunriseText);
 
         EditText et_sunset = (EditText) v.findViewById(R.id.et_sunset);
-        et_sunset.setText("(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunset()) + ") "
-                + azimuthFormatter.format(sunInfo.getAzimuthSet()) + DEGREE);
+        String sunsetText = "(" + AstroDateCalendarParser.getDateTime(sunInfo.getSunset()) + ") "
+                + azimuthFormatter.format(sunInfo.getAzimuthSet()) + DEGREE;
+        et_sunset.setText(sunsetText);
 
         EditText et_dusk = (EditText) v.findViewById(R.id.et_dusk);
         et_dusk.setText(AstroDateCalendarParser.getDateTime(sunInfo.getTwilightEvening()));
