@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.przemek.astroweather.CustomException.BadRangeException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -84,19 +87,31 @@ public class SettingsActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                settingsStorage.setLongitude(
-                        Float.parseFloat(et_longitude.getText().toString()));
-                settingsStorage.setLatitude(
-                        Float.parseFloat(et_latitude.getText().toString()));
-                settingsStorage.setDataFrequencyRefresh(
-                        Integer.parseInt(frequencySpinner.getSelectedItem().toString()));
 
-                int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
-                settingsStorage.setTimeZone(inputTimeOffset);
+                try{
+                    settingsStorage.setLongitude(
+                            Float.parseFloat(et_longitude.getText().toString()));
+                    settingsStorage.setLatitude(
+                            Float.parseFloat(et_latitude.getText().toString()));
 
-                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+                    settingsStorage.setDataFrequencyRefresh(
+                            Integer.parseInt(frequencySpinner.getSelectedItem().toString()));
 
-                saveData();
+                    int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
+                    settingsStorage.setTimeZone(inputTimeOffset);
+
+                    startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+
+                    saveData();
+
+                }catch(BadRangeException e){
+                    Toast.makeText(SettingsActivity.this, "Bad range: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                    et_longitude.setText(String.valueOf(SettingsStorage.getLongitude()));
+                    et_latitude.setText(String.valueOf(SettingsStorage.getLatitude()));
+                }
+
+
             }
         });
     }
@@ -114,8 +129,14 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void restoreData(){
-        SettingsStorage.setLongitude(Double.parseDouble(mPrefs.getString("longitude", "404")));
-        SettingsStorage.setLatitude(Double.parseDouble(mPrefs.getString("latitude", "404")));
+        try{
+            SettingsStorage.setLongitude(Double.parseDouble(mPrefs.getString("longitude", "404")));
+            SettingsStorage.setLatitude(Double.parseDouble(mPrefs.getString("latitude", "404")));
+        } catch (BadRangeException e){
+            Toast.makeText(SettingsActivity.this, "Error while restore data",
+                    Toast.LENGTH_LONG).show();
+        }
+
 
         SettingsStorage.setTimeZone(mPrefs.getInt("time_zone", 4));
         SettingsStorage.setDataFrequencyRefresh(mPrefs.getInt("refresh", 4));
