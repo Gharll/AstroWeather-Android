@@ -9,12 +9,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.przemek.astroweather.CustomException.BadRangeException;
+import com.example.przemek.astroweather.Fragment.MoonFragment;
+import com.example.przemek.astroweather.Fragment.SettingsStorage;
+import com.example.przemek.astroweather.Fragment.SunFragment;
+import com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFragment;
+import com.example.przemek.astroweather.Fragment.WeatherBasicInfoFragment;
+import com.example.przemek.astroweather.Fragment.WeatherForecastFragment;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class AstroWeatherActivity extends AppCompatActivity
-        implements MoonFragment.OnFragmentInteractionListener, SunFragment.OnFragmentInteractionListener{
+        implements MoonFragment.OnFragmentInteractionListener,
+        SunFragment.OnFragmentInteractionListener ,
+        WeatherBasicInfoFragment.OnFragmentInteractionListener,
+        WeatherAdditionalInfoFragment.OnFragmentInteractionListener,
+        WeatherForecastFragment.OnFragmentInteractionListener{
 
     FragmentPagerAdapter adapterViewPager;
 
@@ -35,6 +47,12 @@ public class AstroWeatherActivity extends AppCompatActivity
             pageInit();
         }
 
+        SettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+        try {
+            SettingsStorage.restoreData();
+        } catch (BadRangeException e) {
+            e.printStackTrace();
+        }
         currentTimeAndDataInit();
 
     }

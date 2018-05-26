@@ -1,4 +1,4 @@
-package com.example.przemek.astroweather;
+package com.example.przemek.astroweather.Fragment;
 
 import android.support.v4.app.Fragment;
 

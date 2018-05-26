@@ -1,4 +1,4 @@
-package com.example.przemek.astroweather;
+package com.example.przemek.astroweather.Fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,20 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
-
-import java.text.SimpleDateFormat;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import com.example.przemek.astroweather.AstroDateCalendarParser;
+import com.example.przemek.astroweather.R;
 
 
 /**

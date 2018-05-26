@@ -30,9 +30,6 @@ public class AstroDateCalendarParser {
         astroDateTime.setMinute(calendar.get(Calendar.MINUTE));
         astroDateTime.setSecond(calendar.get(Calendar.SECOND));
 
-
-
-
         return astroDateTime;
     }
 

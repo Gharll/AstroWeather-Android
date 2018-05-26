@@ -26,6 +26,24 @@
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TabItem
+                android:id="@+id/tab_basic_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Basic Weather" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_additional_weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Additonal Weather" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_weather_forecast"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Weather Forecast" />
+
+            <android.support.design.widget.TabItem
                 android:id="@+id/tab_moon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

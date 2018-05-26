@@ -9,10 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
+import com.example.przemek.astroweather.Fragment.SettingsStorage;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -23,7 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner timeZoneSpinner;
 
 
-    SharedPreferences mPrefs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,13 @@ public class SettingsActivity extends AppCompatActivity {
         init();
         saveAndExitHandle();
 
-        mPrefs = getSharedPreferences("settings", 0);
-        restoreData();
+
+        try{
+            SettingsStorage.restoreData();
+        } catch (BadRangeException e){
+
+        }
+
         showCurrentSettings();
     }
 
@@ -41,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
     ArrayAdapter<String> timeZoneAdapter;
 
     private void init(){
+        SettingsStorage.mPrefs = getSharedPreferences("settings", 0);
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
         initSpinner();
@@ -102,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     startActivity(new Intent(SettingsActivity.this, MainActivity.class));
 
-                    saveData();
+                    SettingsStorage.saveData();
 
                 }catch(BadRangeException e){
                     Toast.makeText(SettingsActivity.this, "Bad range: " + e.getMessage(),
@@ -128,25 +134,5 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
-    private void restoreData(){
-        try{
-            SettingsStorage.setLongitude(Double.parseDouble(mPrefs.getString("longitude", "404")));
-            SettingsStorage.setLatitude(Double.parseDouble(mPrefs.getString("latitude", "404")));
-        } catch (BadRangeException e){
-            Toast.makeText(SettingsActivity.this, "Error while restore data",
-                    Toast.LENGTH_LONG).show();
-        }
 
-
-        SettingsStorage.setTimeZone(mPrefs.getInt("time_zone", 4));
-        SettingsStorage.setDataFrequencyRefresh(mPrefs.getInt("refresh", 4));
-    }
-
-    private void saveData(){
-        SharedPreferences.Editor mEditor = mPrefs.edit();
-        mEditor.putString("longitude", String.valueOf(SettingsStorage.getLongitude())).commit();
-        mEditor.putString("latitude", String.valueOf(SettingsStorage.getLatitude())).commit();
-        mEditor.putInt("time_zone", SettingsStorage.getTimeZone()).commit();
-        mEditor.putInt("refresh", SettingsStorage.getDataFrequencyRefresh()).commit();
-    }
 }

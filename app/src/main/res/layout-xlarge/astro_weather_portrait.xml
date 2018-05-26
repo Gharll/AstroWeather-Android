@@ -72,7 +72,7 @@
 
             <fragment
                 android:id="@+id/fragment"
-                android:name="com.example.przemek.astroweather.MoonFragment"
+                android:name="com.example.przemek.astroweather.Fragment.MoonFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -81,7 +81,7 @@
 
             <fragment
                 android:id="@+id/fragment2"
-                android:name="com.example.przemek.astroweather.SunFragment"
+                android:name="com.example.przemek.astroweather.Fragment.SunFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

@@ -1,7 +1,12 @@
-package com.example.przemek.astroweather;
+package com.example.przemek.astroweather.Fragment;
+
+import android.content.SharedPreferences;
+import android.widget.Toast;
 import android.content.SharedPreferences;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
+import com.example.przemek.astroweather.SettingsActivity;
+
 
 /**
  * Created by Przemek on 18.04.2018.
@@ -38,6 +43,23 @@ public class SettingsStorage {
         return settingsStorage;
     }
 
+
+    public static SharedPreferences mPrefs;
+
+    public static void restoreData() throws BadRangeException{
+        SettingsStorage.setLongitude(Double.parseDouble(mPrefs.getString("longitude", "50")));
+        SettingsStorage.setLatitude(Double.parseDouble(mPrefs.getString("latitude", "50")));
+        SettingsStorage.setTimeZone(mPrefs.getInt("time_zone", 4));
+        SettingsStorage.setDataFrequencyRefresh(mPrefs.getInt("refresh", 4));
+    }
+
+    public static void saveData(){
+        SharedPreferences.Editor mEditor = mPrefs.edit();
+        mEditor.putString("longitude", String.valueOf(SettingsStorage.getLongitude())).commit();
+        mEditor.putString("latitude", String.valueOf(SettingsStorage.getLatitude())).commit();
+        mEditor.putInt("time_zone", SettingsStorage.getTimeZone()).commit();
+        mEditor.putInt("refresh", SettingsStorage.getDataFrequencyRefresh()).commit();
+    }
 
     public static double getLongitude() {
         return longitude;
