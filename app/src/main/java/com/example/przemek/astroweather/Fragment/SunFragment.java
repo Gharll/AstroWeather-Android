@@ -78,11 +78,11 @@ public class SunFragment extends Fragment {
                 updateInfo(mView);
                 refreshHandler.postDelayed(this, seconds * 1000);
             }
-        };
+};
         refreshHandler.postDelayed(runnable, seconds * 1000);
 
-        updateInfo(v);
-        return v;
+                updateInfo(v);
+                return v;
     }
 
     public void updateInfo(View v){

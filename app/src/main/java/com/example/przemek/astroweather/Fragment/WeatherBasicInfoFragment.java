@@ -3,12 +3,20 @@ package com.example.przemek.astroweather.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.WeatherDownloader;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -58,11 +66,33 @@ public class WeatherBasicInfoFragment extends Fragment {
         }
     }
 
+
+    View mView;
+    final Handler refreshHandler = new Handler();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather_basic_info, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_weather_basic_info, container, false);
+        mView = v;
+
+
+        EditText et_place = (EditText) v.findViewById(R.id.et_place);
+
+        WeatherDownloader weatherDownloader = new WeatherDownloader();
+
+        try {
+            JSONObject json = weatherDownloader.execute("lodz").get();
+            et_place.setText(json.getString("created"));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
