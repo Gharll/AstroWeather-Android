@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.Fragment.MoonFragment;
-import com.example.przemek.astroweather.Fragment.SettingsStorage;
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 import com.example.przemek.astroweather.Fragment.SunFragment;
 import com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFragment;
 import com.example.przemek.astroweather.Fragment.WeatherBasicInfoFragment;
@@ -47,9 +47,9 @@ public class AstroWeatherActivity extends AppCompatActivity
             pageInit();
         }
 
-        SettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+        AstroSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
         try {
-            SettingsStorage.restoreData();
+            AstroSettingsStorage.restoreData();
         } catch (BadRangeException e) {
             e.printStackTrace();
         }
@@ -121,7 +121,7 @@ public class AstroWeatherActivity extends AppCompatActivity
         SimpleDateFormat sdfDate = new SimpleDateFormat(pattern);
         Date now = new Date();
         calendar.setTime(now);
-        calendar.add(Calendar.HOUR, SettingsStorage.getTimeZone());
+        calendar.add(Calendar.HOUR, AstroSettingsStorage.getTimeZone());
 
         return sdfDate.format(calendar.getTime());
     }

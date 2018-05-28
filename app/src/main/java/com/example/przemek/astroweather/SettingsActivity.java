@@ -1,7 +1,6 @@
 package com.example.przemek.astroweather;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,11 +11,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
-import com.example.przemek.astroweather.Fragment.SettingsStorage;
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private SettingsStorage settingsStorage = SettingsStorage.getInstance();
+    private AstroSettingsStorage settingsStorage = AstroSettingsStorage.getInstance();
     private EditText et_longitude;
     private EditText et_latitude;
     private Spinner frequencySpinner;
@@ -34,7 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         try{
-            SettingsStorage.restoreData();
+            AstroSettingsStorage.restoreData();
         } catch (BadRangeException e){
 
         }
@@ -46,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
     ArrayAdapter<String> timeZoneAdapter;
 
     private void init(){
-        SettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+        AstroSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
         initSpinner();
@@ -108,13 +107,13 @@ public class SettingsActivity extends AppCompatActivity {
 
                     startActivity(new Intent(SettingsActivity.this, MainActivity.class));
 
-                    SettingsStorage.saveData();
+                    AstroSettingsStorage.saveData();
 
                 }catch(BadRangeException e){
                     Toast.makeText(SettingsActivity.this, "Bad range: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
-                    et_longitude.setText(String.valueOf(SettingsStorage.getLongitude()));
-                    et_latitude.setText(String.valueOf(SettingsStorage.getLatitude()));
+                    et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
+                    et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
                 }
 
 
@@ -127,10 +126,10 @@ public class SettingsActivity extends AppCompatActivity {
         et_latitude.setText(String.valueOf(settingsStorage.getLatitude()));
         frequencySpinner.setSelection(
                 frequencyAdapter.getPosition(
-                        String.valueOf(SettingsStorage.getDataFrequencyRefresh())));
+                        String.valueOf(AstroSettingsStorage.getDataFrequencyRefresh())));
         timeZoneSpinner.setSelection(
                 timeZoneAdapter.getPosition(
-                        String.valueOf(SettingsStorage.getTimeZone())));
+                        String.valueOf(AstroSettingsStorage.getTimeZone())));
     }
 
 

@@ -12,7 +12,8 @@ import android.widget.EditText;
 
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
-import com.example.przemek.astroweather.AstroDateCalendarParser;
+import com.example.przemek.astroweather.Astro.AstroDateCalendarParser;
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 import com.example.przemek.astroweather.R;
 
 import java.text.DecimalFormat;
@@ -71,7 +72,7 @@ public class SunFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_sun, container, false);
         mView = v;
 
-        final int seconds = SettingsStorage.getDataFrequencyRefresh();
+        final int seconds = AstroSettingsStorage.getDataFrequencyRefresh();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -87,10 +88,10 @@ public class SunFragment extends Fragment {
 
     public void updateInfo(View v){
         AstroCalculator.Location astroLocation = new AstroCalculator.Location(
-                SettingsStorage.getLatitude(),
-                SettingsStorage.getLongitude());
+                AstroSettingsStorage.getLatitude(),
+                AstroSettingsStorage.getLongitude());
 
-        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(SettingsStorage.getTimeZone());
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(AstroSettingsStorage.getTimeZone());
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.SunInfo sunInfo = astroCalculator.getSunInfo();
 

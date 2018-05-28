@@ -32,7 +32,7 @@ tools:context="com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFr
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/et_place"
+                    android:id="@+id/et_wind_strength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -55,7 +55,7 @@ tools:context="com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFr
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/et_latitude"
+                    android:id="@+id/et_wind_direction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -78,7 +78,7 @@ tools:context="com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFr
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/et_longitude"
+                    android:id="@+id/et_humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -101,7 +101,7 @@ tools:context="com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFr
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/et_time"
+                    android:id="@+id/et_visibility"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -111,30 +111,6 @@ tools:context="com.example.przemek.astroweather.Fragment.WeatherAdditionalInfoFr
                     android:inputType="textMultiLine"
                     android:text="null" />
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="Air pressure: "
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/et_air_pressure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:editable="false"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="textMultiLine"
-                    android:text="null" />
             </TableRow>
 
             <TableRow

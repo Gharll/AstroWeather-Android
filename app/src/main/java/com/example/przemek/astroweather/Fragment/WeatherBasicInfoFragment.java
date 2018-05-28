@@ -3,7 +3,6 @@ package com.example.przemek.astroweather.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.przemek.astroweather.R;
-import com.example.przemek.astroweather.WeatherDownloader;
-
+import com.example.przemek.astroweather.Weather.UnitFormatter;
+import com.example.przemek.astroweather.Weather.WeatherData;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -68,7 +64,6 @@ public class WeatherBasicInfoFragment extends Fragment {
 
 
     View mView;
-    final Handler refreshHandler = new Handler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,19 +74,27 @@ public class WeatherBasicInfoFragment extends Fragment {
 
 
         EditText et_place = (EditText) v.findViewById(R.id.et_place);
+        EditText et_temperature = (EditText) v.findViewById(R.id.et_temperature);
+        EditText et_longitude = (EditText) v.findViewById(R.id.et_longitude);
+        EditText et_latitude = (EditText) v.findViewById(R.id.et_latitude);
+        EditText et_time = (EditText) v.findViewById(R.id.et_time);
+        EditText et_air_pressure = (EditText) v.findViewById(R.id.et_air_pressure);
 
-        WeatherDownloader weatherDownloader = new WeatherDownloader();
-
+        WeatherData weatherData = new WeatherData("lodz");
         try {
-            JSONObject json = weatherDownloader.execute("lodz").get();
-            et_place.setText(json.getString("created"));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+            et_place.setText(weatherData.getCity() + ", " + weatherData.getCountry());
+            et_longitude.setText(weatherData.getLongitude());
+            et_latitude.setText(weatherData.getLatitude());
+            float celsius = UnitFormatter.convertFahrenheitToCelsius(
+                    Float.parseFloat(weatherData.getFahrenheitTemperature()));
+            et_temperature.setText(UnitFormatter.getFormattedCelsius(celsius));
+            et_time.setText(weatherData.getTime());
+            et_air_pressure.setText(weatherData.getAirPressure());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return v;
     }
 

@@ -7,8 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.Weather.WeatherData;
+
+import org.json.JSONException;
 
 
 /**
@@ -58,11 +62,31 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         }
     }
 
+    View mView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather_additional_info, container, false);
+        View v = inflater.inflate(R.layout.fragment_weather_additional_info, container, false);
+        mView = v;
+
+        WeatherData weatherData = new WeatherData("lodz");
+
+        EditText et_wind_strength = (EditText) v.findViewById(R.id.et_wind_strength);
+        EditText et_wind_direction = (EditText) v.findViewById(R.id.et_wind_direction);
+        EditText et_humidity = (EditText) v.findViewById(R.id.et_humidity);
+        EditText et_visibility = (EditText) v.findViewById(R.id.et_visibility);
+
+        try {
+            et_wind_strength.setText(weatherData.getWindStrength());
+            et_wind_direction.setText(weatherData.getWindDirection());
+            et_humidity.setText(weatherData.getHumidity());
+            et_visibility.setText(weatherData.getVisibility());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

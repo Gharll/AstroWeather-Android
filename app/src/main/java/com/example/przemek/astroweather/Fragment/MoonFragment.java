@@ -15,7 +15,8 @@ import java.text.NumberFormat;
 
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
-import com.example.przemek.astroweather.AstroDateCalendarParser;
+import com.example.przemek.astroweather.Astro.AstroDateCalendarParser;
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 import com.example.przemek.astroweather.R;
 
 
@@ -73,7 +74,7 @@ public class MoonFragment extends Fragment {
         mView = v;
         updateInfo(v);
 
-        final int seconds = SettingsStorage.getDataFrequencyRefresh();
+        final int seconds = AstroSettingsStorage.getDataFrequencyRefresh();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -88,7 +89,7 @@ public class MoonFragment extends Fragment {
     }
 
     public void updateInfo(View v){
-        SettingsStorage settingsStorage = SettingsStorage.getInstance();
+        AstroSettingsStorage settingsStorage = AstroSettingsStorage.getInstance();
         AstroCalculator.Location astroLocation = new AstroCalculator.Location(
                 settingsStorage.getLatitude(),
                 settingsStorage.getLongitude()

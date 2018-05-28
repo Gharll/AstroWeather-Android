@@ -1,4 +1,4 @@
-package com.example.przemek.astroweather;
+package com.example.przemek.astroweather.Weather;
 
 import android.os.AsyncTask;
 
