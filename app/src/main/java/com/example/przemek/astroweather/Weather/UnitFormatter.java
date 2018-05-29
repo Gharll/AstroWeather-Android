@@ -21,7 +21,7 @@ public class UnitFormatter {
     }
 
     public static String getFormattedFahrenheit(float fahrenheit){
-        return convertDegreeWithPrecision(fahrenheit) + " " + DEGREE + "C";
+        return convertDegreeWithPrecision(fahrenheit) + " " + DEGREE + "F";
     }
 
     private static String convertDegreeWithPrecision(float degree){

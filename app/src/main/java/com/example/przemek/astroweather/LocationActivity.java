@@ -17,15 +17,17 @@ import org.w3c.dom.Text;
 
 public class LocationActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
         final TableLayout table = (TableLayout) findViewById(R.id.table_stored_location);
-        Button addLocationButton = (Button) findViewById(R.id.btn_add_location);
+        final Button addLocationButton = (Button) findViewById(R.id.btn_add_location);
         final TextView error_message = (TextView) findViewById(R.id.tv_error_message);
         error_message.setVisibility(View.INVISIBLE);
+        final EditText et_current_location = (EditText) findViewById(R.id.et_current_location);
 
         final EditText et_new_location = (EditText) findViewById(R.id.et_new_location);
 
@@ -37,7 +39,7 @@ public class LocationActivity extends AppCompatActivity {
                 WeatherData weatherData = new WeatherData(userInput);
                 try {
                     weatherData.downloadCurrentData();
-                    table.addView(createRowLocation(weatherData.getLocationName()));
+                    createRowLocation(weatherData.getLocationName(), table, et_current_location);
                 } catch (LocationNotExistsException e) {
                     error_message.setVisibility(View.VISIBLE);
                     error_message.setText(e.getMessage());
@@ -51,8 +53,11 @@ public class LocationActivity extends AppCompatActivity {
 
     }
 
-    private TableRow createRowLocation(String name) {
-        TableRow row = new TableRow(this);
+    private void createRowLocation(String name, TableLayout table, EditText et_current_location) {
+        final TableLayout tl = table;
+        final TableRow row = new TableRow(this);
+        final EditText current_location = et_current_location;
+        final String mName = name;
 
         TextView tv_location = new TextView(this);
         tv_location.setText("Location: ");
@@ -61,9 +66,28 @@ public class LocationActivity extends AppCompatActivity {
         et_stored_location.setText(name);
         et_stored_location.setKeyListener(null);
 
+        Button delete_button = new Button(this);
+        delete_button.setText("delete");
+        delete_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tl.removeView(row);
+            }
+        });
+
+        final Button current_button = new Button(this);
+        current_button.setText("current");
+        current_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                current_location.setText(mName);
+            }
+        });
+
         row.addView(tv_location);
         row.addView(et_stored_location);
-
-        return row;
+        row.addView(delete_button);
+        row.addView(current_button);
+        table.addView(row);
     }
 }

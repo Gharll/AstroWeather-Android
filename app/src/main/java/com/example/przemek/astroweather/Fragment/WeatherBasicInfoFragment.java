@@ -102,7 +102,7 @@ public class WeatherBasicInfoFragment extends Fragment {
             }
             if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.FAHRENHEIT){
                 float fahrenheit =  Float.parseFloat(weatherData.getFahrenheitTemperature());
-                et_temperature.setText(UnitFormatter.getFormattedCelsius(fahrenheit));
+                et_temperature.setText(UnitFormatter.getFormattedFahrenheit(fahrenheit));
             }
 
 
