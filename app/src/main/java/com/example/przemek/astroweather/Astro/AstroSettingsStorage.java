@@ -12,34 +12,21 @@ import com.example.przemek.astroweather.CustomException.BadRangeException;
 public class AstroSettingsStorage {
 
     private static AstroSettingsStorage settingsStorage = null;
-    private static double longitude;
-    private static double latitude;
-    private static Integer dataFrequencyRefresh;
-    private static Integer timeZone;
+    private static double longitude = 51.7537150;
+    private static double latitude = 19.4517180;
+    private static Integer dataFrequencyRefresh = 1;
+    private static Integer timeZone = 2;
 
-    public final int MIN_TIME_OFFSET = -12;
-    public final int MAX_TIME_OFFSET = 14;
-    public final static int MAX_LONGITUDE = 80;
-    public final static int MAX_LATITUDE = 80;
-    public final static int MIN_LONGITUDE = -80;
-    public final static int MIN_LATITUDE = -80;
+    public final static int MIN_TIME_OFFSET = -12;
+    public final static int MAX_TIME_OFFSET = 14;
+    public final static int MAX_LONGITUDE = 70;
+    public final static int MAX_LATITUDE = 70;
+    public final static int MIN_LONGITUDE = -70;
+    public final static int MIN_LATITUDE = -70;
 
     private AstroSettingsStorage(){
 
     }
-
-    public static AstroSettingsStorage getInstance(){
-        if(settingsStorage == null){
-            settingsStorage = new AstroSettingsStorage();
-
-            latitude = 51.7537150;
-            longitude = 19.4517180;
-            dataFrequencyRefresh = 1;
-            timeZone = 2;
-        }
-        return settingsStorage;
-    }
-
 
     public static SharedPreferences mPrefs;
 

@@ -11,8 +11,11 @@ import android.widget.EditText;
 
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.UnitFormatter;
 import com.example.przemek.astroweather.Weather.WeatherData;
+import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
+
 import org.json.JSONException;
 
 
@@ -91,9 +94,18 @@ public class WeatherBasicInfoFragment extends Fragment {
             et_place.setText(weatherData.getCity() + ", " + weatherData.getCountry());
             et_longitude.setText(weatherData.getLongitude());
             et_latitude.setText(weatherData.getLatitude());
-            float celsius = UnitFormatter.convertFahrenheitToCelsius(
-                    Float.parseFloat(weatherData.getFahrenheitTemperature()));
-            et_temperature.setText(UnitFormatter.getFormattedCelsius(celsius));
+
+            if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.CELSIUS){
+                float celsius = UnitFormatter.convertFahrenheitToCelsius(
+                        Float.parseFloat(weatherData.getFahrenheitTemperature()));
+                et_temperature.setText(UnitFormatter.getFormattedCelsius(celsius));
+            }
+            if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.FAHRENHEIT){
+                float fahrenheit =  Float.parseFloat(weatherData.getFahrenheitTemperature());
+                et_temperature.setText(UnitFormatter.getFormattedCelsius(fahrenheit));
+            }
+
+
             et_time.setText(weatherData.getTime());
             et_air_pressure.setText(weatherData.getAirPressure());
 

@@ -5,4 +5,18 @@ package com.example.przemek.astroweather.Weather;
  */
 
 public class WeatherSettingsStorage {
+
+    private WeatherSettingsStorage(){
+
+    }
+
+    private static TemperatureUnitEnum temperature = TemperatureUnitEnum.FAHRENHEIT;
+
+    public static TemperatureUnitEnum getTemperature(){
+        return temperature;
+    }
+
+    public static void setTemperature(TemperatureUnitEnum temperature){
+        WeatherSettingsStorage.temperature = temperature;
+    }
 }

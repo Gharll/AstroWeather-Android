@@ -89,16 +89,15 @@ public class MoonFragment extends Fragment {
     }
 
     public void updateInfo(View v){
-        AstroSettingsStorage settingsStorage = AstroSettingsStorage.getInstance();
         AstroCalculator.Location astroLocation = new AstroCalculator.Location(
-                settingsStorage.getLatitude(),
-                settingsStorage.getLongitude()
+                AstroSettingsStorage.getLatitude(),
+                AstroSettingsStorage.getLongitude()
         );
 
         NumberFormat formatter = new DecimalFormat("#0.00");
 
 
-        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(settingsStorage.getTimeZone());
+        AstroDateTime astroDateTime = AstroDateCalendarParser.getNow(AstroSettingsStorage.getTimeZone());
         AstroCalculator astroCalculator = new AstroCalculator(astroDateTime, astroLocation);
         AstroCalculator.MoonInfo moonInfo = astroCalculator.getMoonInfo();
 

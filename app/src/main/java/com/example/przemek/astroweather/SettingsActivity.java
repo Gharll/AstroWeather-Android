@@ -12,16 +12,16 @@ import android.widget.Toast;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
+import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
+import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private AstroSettingsStorage settingsStorage = AstroSettingsStorage.getInstance();
     private EditText et_longitude;
     private EditText et_latitude;
     private Spinner frequencySpinner;
     private Spinner timeZoneSpinner;
-
-
+    private Spinner temperatureSpinner;
 
 
     @Override
@@ -32,9 +32,9 @@ public class SettingsActivity extends AppCompatActivity {
         saveAndExitHandle();
 
 
-        try{
+        try {
             AstroSettingsStorage.restoreData();
-        } catch (BadRangeException e){
+        } catch (BadRangeException e) {
 
         }
 
@@ -43,95 +43,116 @@ public class SettingsActivity extends AppCompatActivity {
 
     ArrayAdapter<String> frequencyAdapter;
     ArrayAdapter<String> timeZoneAdapter;
+    ArrayAdapter<String> temperatureAdapter;
 
-    private void init(){
+    private void init() {
         AstroSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
-        initSpinner();
+        initFrequencySpinner();
+        initTimeZoneSpinner();
+        initTemperatureSpinner();
     }
 
-    private void initSpinner(){
+    private void initFrequencySpinner() {
         String[] frequencyArraySpinner = new String[]{
                 "1", "5", "10", "30", "60"
         };
-
-        String[] timeZoneArraySpinner = initTimeZoneArraySpinner();
-
         frequencyAdapter = initAdapter(frequencyArraySpinner);
         frequencySpinner = initSpinner(R.id.spinner_frequency, frequencyArraySpinner);
+    }
 
+    private void initTimeZoneSpinner() {
+        String[] timeZoneArraySpinner = initTimeZoneArraySpinner();
         timeZoneAdapter = initAdapter(timeZoneArraySpinner);
         timeZoneSpinner = initSpinner(R.id.spinner_timezone, timeZoneArraySpinner);
     }
 
-    private String[] initTimeZoneArraySpinner(){
-        int size = settingsStorage.MAX_TIME_OFFSET - settingsStorage.MIN_TIME_OFFSET + 1;
+    private String[] initTimeZoneArraySpinner() {
+        int size = AstroSettingsStorage.MAX_TIME_OFFSET - AstroSettingsStorage.MIN_TIME_OFFSET + 1;
         String[] timeZoneArraySpinner = new String[size];
         int index = 0;
-        for(int i = settingsStorage.MIN_TIME_OFFSET; i <= settingsStorage.MAX_TIME_OFFSET; i++){
+        for (int i = AstroSettingsStorage.MIN_TIME_OFFSET; i <= AstroSettingsStorage.MAX_TIME_OFFSET; i++) {
             timeZoneArraySpinner[index++] = String.valueOf(i);
         }
 
         return timeZoneArraySpinner;
     }
 
-    private ArrayAdapter<String> initAdapter(String[] arraySpinner){
+    private void initTemperatureSpinner() {
+        String[] temperatureArraySpinner = new String[]{
+                TemperatureUnitEnum.CELSIUS.name(), TemperatureUnitEnum.FAHRENHEIT.name()
+        };
+
+        temperatureAdapter = initAdapter(temperatureArraySpinner);
+        temperatureSpinner = initSpinner(R.id.spinner_temperature, temperatureArraySpinner);
+    }
+
+    private ArrayAdapter<String> initAdapter(String[] arraySpinner) {
         return new ArrayAdapter<String>(this, R.layout.spinner_item, arraySpinner);
     }
 
-    private Spinner initSpinner(int id, String[] arraySpinner){
+    private Spinner initSpinner(int id, String[] arraySpinner) {
         ArrayAdapter<String> adapter = initAdapter(arraySpinner);
         Spinner spinner = (Spinner) findViewById(id);
         spinner.setAdapter(adapter);
         return spinner;
     }
 
-    private void saveAndExitHandle(){
+    private void saveAndExitHandle() {
         Button button = (Button) findViewById(R.id.btn_save_and_exit);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                try{
-                    settingsStorage.setLongitude(
-                            Float.parseFloat(et_longitude.getText().toString()));
-                    settingsStorage.setLatitude(
-                            Float.parseFloat(et_latitude.getText().toString()));
-
-                    settingsStorage.setDataFrequencyRefresh(
-                            Integer.parseInt(frequencySpinner.getSelectedItem().toString()));
-
-                    int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
-                    settingsStorage.setTimeZone(inputTimeOffset);
-
-                    startActivity(new Intent(SettingsActivity.this, MainActivity.class));
-
-                    AstroSettingsStorage.saveData();
-
-                }catch(BadRangeException e){
+                try {
+                    saveAstroSettings();
+                } catch (BadRangeException e) {
                     Toast.makeText(SettingsActivity.this, "Bad range: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                     et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
                     et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
                 }
-
-
+                saveWeatherSettings();
             }
         });
     }
 
-    private void showCurrentSettings(){
-        et_longitude.setText(String.valueOf(settingsStorage.getLongitude()));
-        et_latitude.setText(String.valueOf(settingsStorage.getLatitude()));
+    private void saveAstroSettings() throws BadRangeException {
+        AstroSettingsStorage.setLongitude(
+                Float.parseFloat(et_longitude.getText().toString()));
+        AstroSettingsStorage.setLatitude(
+                Float.parseFloat(et_latitude.getText().toString()));
+
+        AstroSettingsStorage.setDataFrequencyRefresh(
+                Integer.parseInt(frequencySpinner.getSelectedItem().toString()));
+
+        int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
+        AstroSettingsStorage.setTimeZone(inputTimeOffset);
+
+        startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+
+        AstroSettingsStorage.saveData();
+    }
+
+    private void saveWeatherSettings() {
+        String temperatureStr = temperatureSpinner.getSelectedItem().toString();
+        WeatherSettingsStorage.setTemperature(TemperatureUnitEnum.valueOf(temperatureStr));
+    }
+
+    private void showCurrentSettings() {
+        et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
+        et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
         frequencySpinner.setSelection(
                 frequencyAdapter.getPosition(
                         String.valueOf(AstroSettingsStorage.getDataFrequencyRefresh())));
         timeZoneSpinner.setSelection(
                 timeZoneAdapter.getPosition(
                         String.valueOf(AstroSettingsStorage.getTimeZone())));
-    }
 
+        temperatureSpinner.setSelection(
+                temperatureAdapter.getPosition(WeatherSettingsStorage.getTemperature().toString())
+        );
+    }
 
 
 }
