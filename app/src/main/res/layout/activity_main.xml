@@ -35,6 +35,7 @@
             android:id="@+id/btn_astro_weather"
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:layout_marginBottom="30dp"
             android:text="Astro Weather" />
 
         <Button
@@ -42,6 +43,12 @@
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="Settings" />
+
+        <Button
+            android:id="@+id/btn_location"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="Location" />
 
         <Button
             android:id="@+id/btn_exit"

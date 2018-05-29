@@ -19,23 +19,27 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class WeatherDownloader extends AsyncTask<String, Void, JSONObject> {
 
-    protected JSONObject getJson(String cityName){
-        String endpoint = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22%C5%81%C3%B3d%C5%BA%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+    protected JSONObject getJson(String locationName){
+        //String endpoint = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22%C5%81%C3%B3d%C5%BA%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+
+
+        String endpoint = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22" + locationName+ "%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
         JSONObject jsonObject = null;
         try {
             URL url = new URL(endpoint);
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.connect();
 
-            if(connection.getResponseCode() != 200){
+            /*if(connection.getResponseCode() != 200){
                 return null;
-            }
+            }*/
 
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
 
             String jsonRaw = read(bufferedReader);
             jsonObject = (new JSONObject(jsonRaw)).getJSONObject("query");
+
 
         } catch (java.io.IOException e) {
             e.printStackTrace();

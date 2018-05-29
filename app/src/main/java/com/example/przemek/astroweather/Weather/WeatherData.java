@@ -1,5 +1,7 @@
 package com.example.przemek.astroweather.Weather;
 
+import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,12 +21,17 @@ public class WeatherData {
     public WeatherData(String locationName){
         this.locationName = locationName;
         this.weatherDownloader = new WeatherDownloader();
-        downloadCurrentData();
+        //downloadCurrentData();
     }
 
-    public void downloadCurrentData(){
+    public void downloadCurrentData() throws LocationNotExistsException {
         try {
             json = weatherDownloader.execute(locationName).get();
+
+            if (json.isNull("results")){
+                throw new LocationNotExistsException(locationName);
+            }
+
             channel = json.getJSONObject( "results").getJSONObject("channel");
         } catch (InterruptedException | ExecutionException | JSONException e) {
             e.printStackTrace();
@@ -37,6 +44,10 @@ public class WeatherData {
 
     public String getCountry() throws JSONException {
         return channel.getJSONObject("location").getString("country");
+    }
+
+    public String getLocationName() throws JSONException{
+        return getCity() + ", " + getCountry();
     }
 
     public String getFahrenheitTemperature() throws JSONException {
@@ -74,4 +85,5 @@ public class WeatherData {
     public String getVisibility() throws JSONException{
         return channel.getJSONObject("atmosphere").getString("visibility");
     }
+
 }

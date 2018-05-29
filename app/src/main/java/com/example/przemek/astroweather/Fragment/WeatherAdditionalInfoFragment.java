@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.R;
 import com.example.przemek.astroweather.Weather.WeatherData;
 
@@ -71,6 +72,11 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         mView = v;
 
         WeatherData weatherData = new WeatherData("lodz");
+        try {
+            weatherData.downloadCurrentData();
+        } catch (LocationNotExistsException e) {
+            e.printStackTrace();
+        }
 
         EditText et_wind_strength = (EditText) v.findViewById(R.id.et_wind_strength);
         EditText et_wind_direction = (EditText) v.findViewById(R.id.et_wind_direction);

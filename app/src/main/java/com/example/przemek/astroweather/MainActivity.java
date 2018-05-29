@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         configureActivity(R.id.btn_astro_weather, AstroWeatherActivity.class);
         configureActivity(R.id.btn_settings, SettingsActivity.class);
+        configureActivity(R.id.btn_location, LocationActivity.class);
         handleExit();
     }
 
