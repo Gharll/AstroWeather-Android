@@ -11,7 +11,8 @@ import android.widget.EditText;
 
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.R;
-import com.example.przemek.astroweather.Weather.WeatherData;
+import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherReader;
 
 import org.json.JSONException;
 
@@ -71,12 +72,14 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_weather_additional_info, container, false);
         mView = v;
 
-        WeatherData weatherData = new WeatherData("lodz");
-        try {
-            weatherData.downloadCurrentData();
+        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
+        WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+
+        /*try {
+            weatherReader.downloadCurrentData();
         } catch (LocationNotExistsException e) {
             e.printStackTrace();
-        }
+        }*/
 
         EditText et_wind_strength = (EditText) v.findViewById(R.id.et_wind_strength);
         EditText et_wind_direction = (EditText) v.findViewById(R.id.et_wind_direction);
@@ -84,10 +87,10 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         EditText et_visibility = (EditText) v.findViewById(R.id.et_visibility);
 
         try {
-            et_wind_strength.setText(weatherData.getWindStrength());
-            et_wind_direction.setText(weatherData.getWindDirection());
-            et_humidity.setText(weatherData.getHumidity());
-            et_visibility.setText(weatherData.getVisibility());
+            et_wind_strength.setText(weatherReader.getWindStrength());
+            et_wind_direction.setText(weatherReader.getWindDirection());
+            et_humidity.setText(weatherReader.getHumidity());
+            et_visibility.setText(weatherReader.getVisibility());
         } catch (JSONException e) {
             e.printStackTrace();
         }

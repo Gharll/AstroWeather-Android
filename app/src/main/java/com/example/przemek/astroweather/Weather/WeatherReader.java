@@ -11,29 +11,25 @@ import java.util.concurrent.ExecutionException;
  * Created by Przemek on 28.05.2018.
  */
 
-public class WeatherData {
+public class WeatherReader {
 
-    private JSONObject json;
+    private JSONObject weatherJSON;
     private JSONObject channel;
-    private String locationName;
-    private WeatherDownloader weatherDownloader;
 
-    public WeatherData(String locationName){
-        this.locationName = locationName;
-        this.weatherDownloader = new WeatherDownloader();
-        //downloadCurrentData();
+
+    public WeatherReader(){
+
     }
 
-    public void downloadCurrentData() throws LocationNotExistsException {
+    public WeatherReader(JSONObject weatherJSON){
+        setWeatherJSON(weatherJSON);
+    }
+
+    protected void setWeatherJSON(JSONObject weatherJSON){
+        this.weatherJSON = weatherJSON;
         try {
-            json = weatherDownloader.execute(locationName).get();
-
-            if (json.isNull("results")){
-                throw new LocationNotExistsException(locationName);
-            }
-
-            channel = json.getJSONObject( "results").getJSONObject("channel");
-        } catch (InterruptedException | ExecutionException | JSONException e) {
+            channel = weatherJSON.getJSONObject( "results").getJSONObject("channel");
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
@@ -44,10 +40,6 @@ public class WeatherData {
 
     public String getCountry() throws JSONException {
         return channel.getJSONObject("location").getString("country");
-    }
-
-    public String getLocationName() throws JSONException{
-        return getCity() + ", " + getCountry();
     }
 
     public String getFahrenheitTemperature() throws JSONException {

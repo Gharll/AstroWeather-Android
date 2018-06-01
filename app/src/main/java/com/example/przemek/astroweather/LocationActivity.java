@@ -9,11 +9,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.przemek.astroweather.CustomException.LocationAlreadyExists;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
-import com.example.przemek.astroweather.Weather.WeatherData;
+import com.example.przemek.astroweather.Weather.DAO.WeatherDataEntity;
+import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherReader;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
+
+import java.util.List;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -31,29 +35,47 @@ public class LocationActivity extends AppCompatActivity {
 
         final EditText et_new_location = (EditText) findViewById(R.id.et_new_location);
 
+
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 error_message.setVisibility(View.INVISIBLE);
                 String userInput = et_new_location.getText().toString();
-                WeatherData weatherData = new WeatherData(userInput);
+
+                WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
+                weatherDataManager.setCurrentLocation(userInput);
+
                 try {
-                    weatherData.downloadCurrentData();
-                    createRowLocation(weatherData.getLocationName(), table, et_current_location);
+                    weatherDataManager.storeCity(userInput);
+                    weatherDataManager.setCurrentLocation(userInput);
+                    WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+                    createRowLocation(weatherReader.getCity(), table, et_current_location);
                 } catch (LocationNotExistsException e) {
                     error_message.setVisibility(View.VISIBLE);
                     error_message.setText(e.getMessage());
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (LocationAlreadyExists e) {
+                    error_message.setVisibility(View.VISIBLE);
+                    error_message.setText(e.getMessage());
                 }
 
                 et_new_location.setText("");
             }
         });
 
+        showStoredData(table, et_current_location);
     }
 
-    private void createRowLocation(String name, TableLayout table, EditText et_current_location) {
+    public void showStoredData(TableLayout tableLayout, EditText currentLocation ){
+        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
+        List <WeatherDataEntity> storedData = weatherDataManager.getAll();
+        for(WeatherDataEntity data : storedData){
+            createRowLocation(data.getCity(), tableLayout, currentLocation);
+        }
+    }
+
+    private void createRowLocation(final String name, TableLayout table, EditText et_current_location) {
         final TableLayout tl = table;
         final TableRow row = new TableRow(this);
         final EditText current_location = et_current_location;
@@ -71,7 +93,9 @@ public class LocationActivity extends AppCompatActivity {
         delete_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
                 tl.removeView(row);
+                weatherDataManager.deleteStoredLocation(name);
             }
         });
 

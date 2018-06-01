@@ -27,16 +27,11 @@ public class WeatherDownloader extends AsyncTask<String, Void, JSONObject> {
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.connect();
 
-            /*if(connection.getResponseCode() != 200){
-                return null;
-            }*/
-
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(connection.getInputStream()));
 
             String jsonRaw = read(bufferedReader);
             jsonObject = (new JSONObject(jsonRaw)).getJSONObject("query");
-
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
@@ -47,7 +42,7 @@ public class WeatherDownloader extends AsyncTask<String, Void, JSONObject> {
         return jsonObject;
     }
 
-    private static String read(Reader reader) throws IOException {
+    private String read(Reader reader) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
         while ((cp = reader.read()) != -1) {

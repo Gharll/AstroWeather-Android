@@ -30,6 +30,7 @@ public class AstroWeatherActivity extends AppCompatActivity
 
     FragmentPagerAdapter adapterViewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

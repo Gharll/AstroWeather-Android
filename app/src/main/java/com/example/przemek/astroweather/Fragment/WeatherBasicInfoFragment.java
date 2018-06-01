@@ -13,7 +13,8 @@ import com.example.przemek.astroweather.CustomException.LocationNotExistsExcepti
 import com.example.przemek.astroweather.R;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.UnitFormatter;
-import com.example.przemek.astroweather.Weather.WeatherData;
+import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherReader;
 import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
 
 import org.json.JSONException;
@@ -84,30 +85,34 @@ public class WeatherBasicInfoFragment extends Fragment {
         EditText et_time = (EditText) v.findViewById(R.id.et_time);
         EditText et_air_pressure = (EditText) v.findViewById(R.id.et_air_pressure);
 
-        WeatherData weatherData = new WeatherData("lodz");
-        try {
-            weatherData.downloadCurrentData();
+
+        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
+
+        WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+       /* try {
+            weatherReader.downloadCurrentData();
         } catch (LocationNotExistsException e) {
             e.printStackTrace();
-        }
-        try {
-            et_place.setText(weatherData.getCity() + ", " + weatherData.getCountry());
-            et_longitude.setText(weatherData.getLongitude());
-            et_latitude.setText(weatherData.getLatitude());
+        }*/
 
+        try {
+            et_place.setText(weatherReader.getCity() + ", " + weatherReader.getCountry());
+            et_longitude.setText(weatherReader.getLongitude());
+            et_latitude.setText(weatherReader.getLatitude());
+
+
+            float fahrenheit =  Float.parseFloat(weatherReader.getFahrenheitTemperature());
             if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.CELSIUS){
-                float celsius = UnitFormatter.convertFahrenheitToCelsius(
-                        Float.parseFloat(weatherData.getFahrenheitTemperature()));
+                float celsius = UnitFormatter.convertFahrenheitToCelsius(fahrenheit);
                 et_temperature.setText(UnitFormatter.getFormattedCelsius(celsius));
             }
             if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.FAHRENHEIT){
-                float fahrenheit =  Float.parseFloat(weatherData.getFahrenheitTemperature());
                 et_temperature.setText(UnitFormatter.getFormattedFahrenheit(fahrenheit));
             }
 
 
-            et_time.setText(weatherData.getTime());
-            et_air_pressure.setText(weatherData.getAirPressure());
+            et_time.setText(weatherReader.getTime());
+            et_air_pressure.setText(weatherReader.getAirPressure());
 
         } catch (JSONException e) {
             e.printStackTrace();
