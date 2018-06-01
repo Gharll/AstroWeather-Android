@@ -73,7 +73,7 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         mView = v;
 
         WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
-        WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+
 
         /*try {
             weatherReader.downloadCurrentData();
@@ -87,12 +87,15 @@ public class WeatherAdditionalInfoFragment extends Fragment {
         EditText et_visibility = (EditText) v.findViewById(R.id.et_visibility);
 
         try {
+            WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
             et_wind_strength.setText(weatherReader.getWindStrength());
             et_wind_direction.setText(weatherReader.getWindDirection());
             et_humidity.setText(weatherReader.getHumidity());
             et_visibility.setText(weatherReader.getVisibility());
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch(NullPointerException e){
+
         }
 
         return v;

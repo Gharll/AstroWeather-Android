@@ -88,7 +88,7 @@ public class WeatherBasicInfoFragment extends Fragment {
 
         WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
 
-        WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+
        /* try {
             weatherReader.downloadCurrentData();
         } catch (LocationNotExistsException e) {
@@ -96,6 +96,7 @@ public class WeatherBasicInfoFragment extends Fragment {
         }*/
 
         try {
+            WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
             et_place.setText(weatherReader.getCity() + ", " + weatherReader.getCountry());
             et_longitude.setText(weatherReader.getLongitude());
             et_latitude.setText(weatherReader.getLatitude());
@@ -116,6 +117,8 @@ public class WeatherBasicInfoFragment extends Fragment {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e ){
+
         }
 
         return v;

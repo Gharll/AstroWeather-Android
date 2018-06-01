@@ -109,6 +109,11 @@ public class WeatherDataManager {
     public JSONObject getCurrentLocationJSON() {
 
         JSONObject weatherJSON = null;
+
+        if(weatherDataDAO.getCurrentLocation() == null){
+            return null;
+        }
+
         WeatherDataEntity weatherDataEntity =
                 weatherDataDAO.findWeatherDataByCity(weatherDataDAO.getCurrentLocation().getCity());
 
