@@ -32,9 +32,9 @@ public class LocationActivity extends AppCompatActivity {
         final TextView error_message = (TextView) findViewById(R.id.tv_error_message);
         error_message.setVisibility(View.INVISIBLE);
         final EditText et_current_location = (EditText) findViewById(R.id.et_current_location);
-
         final EditText et_new_location = (EditText) findViewById(R.id.et_new_location);
 
+        updateCurrentLocationText(et_current_location);
 
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,13 +43,16 @@ public class LocationActivity extends AppCompatActivity {
                 String userInput = et_new_location.getText().toString();
 
                 WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
-                weatherDataManager.setCurrentLocation(userInput);
+                //weatherDataManager.setCurrentLocation(userInput);
 
                 try {
-                    weatherDataManager.storeCity(userInput);
-                    weatherDataManager.setCurrentLocation(userInput);
+                    String cityName = weatherDataManager.storeCityAndGetFormatedName(userInput);
+                    weatherDataManager.setCurrentLocation(cityName);
+
+
                     WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
                     createRowLocation(weatherReader.getCity(), table, et_current_location);
+                    et_current_location.setText(weatherDataManager.getCurrentLocation().getCity());
                 } catch (LocationNotExistsException e) {
                     error_message.setVisibility(View.VISIBLE);
                     error_message.setText(e.getMessage());
@@ -96,6 +99,7 @@ public class LocationActivity extends AppCompatActivity {
                 WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
                 tl.removeView(row);
                 weatherDataManager.deleteStoredLocation(name);
+                updateCurrentLocationText(current_location);
             }
         });
 
@@ -104,7 +108,9 @@ public class LocationActivity extends AppCompatActivity {
         current_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                current_location.setText(mName);
+                WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
+                weatherDataManager.setCurrentLocation(mName);
+                updateCurrentLocationText(current_location);
             }
         });
 
@@ -113,5 +119,14 @@ public class LocationActivity extends AppCompatActivity {
         row.addView(delete_button);
         row.addView(current_button);
         table.addView(row);
+    }
+
+    private void updateCurrentLocationText(EditText et){
+        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
+        try{
+            et.setText(weatherDataManager.getCurrentLocation().getCity());
+        } catch (NullPointerException e){
+            et.setText("Null");
+        }
     }
 }

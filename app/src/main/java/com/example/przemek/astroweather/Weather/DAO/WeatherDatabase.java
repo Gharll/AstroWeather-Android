@@ -9,7 +9,7 @@ import android.content.Context;
  * Created by Przemek on 31.05.2018.
  */
 
-@Database(entities = {WeatherDataEntity.class}, version = 1)
+@Database(entities = {WeatherDataEntity.class, CurrentLocationEntity.class}, version = 1)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     private static WeatherDatabase weatherDatabase;

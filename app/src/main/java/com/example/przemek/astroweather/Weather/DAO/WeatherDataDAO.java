@@ -30,5 +30,16 @@ public interface WeatherDataDAO {
     WeatherDataEntity findWeatherDataByCity(String searchedCity);
 
     @Query("SELECT * FROM weatherData")
-    List<WeatherDataEntity> getAll();
+    List<WeatherDataEntity> getAllWeatherData();
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertCurrentLocation(CurrentLocationEntity currentLocationEntity);
+
+    @Query("DELETE FROM currentLocation")
+    void clearCurrentLocation();
+
+    @Query("SELECT * FROM weatherData as w JOIN currentLocation as c on w.id = c.weatherDataID")
+    WeatherDataEntity getCurrentLocation();
+
 }
