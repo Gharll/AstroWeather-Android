@@ -13,7 +13,11 @@ import android.widget.Toast;
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
+import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherReader;
 import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
+
+import org.json.JSONException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -52,6 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
         initFrequencySpinner();
         initTimeZoneSpinner();
         initTemperatureSpinner();
+        initCurrentSettingsCord();
     }
 
     private void initFrequencySpinner() {
@@ -154,5 +159,24 @@ public class SettingsActivity extends AppCompatActivity {
         );
     }
 
+    private void initCurrentSettingsCord(){
+        Button get_current_settings = findViewById(R.id.button_get_current_locaiton);
+        get_current_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WeatherDataManager weatherDataManager
+                        = WeatherDataManager.getInstance(getApplicationContext());
 
+                try{
+                    WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+                    et_longitude.setText(weatherReader.getLongitude());
+                    et_latitude.setText(weatherReader.getLatitude());
+                } catch(NullPointerException e){
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 }
