@@ -7,8 +7,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherForecastReader;
+
+import org.json.JSONException;
 
 
 /**
@@ -58,11 +66,55 @@ public class WeatherForecastFragment extends Fragment {
         }
     }
 
+    View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather_forecast, container, false);
+        View v = inflater.inflate(R.layout.fragment_weather_forecast, container, false);
+        mView = v;
+
+        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
+        WeatherForecastReader weatherForecastReader = new WeatherForecastReader(weatherDataManager.getCurrentLocationJSON());
+
+        TableLayout table = v.findViewById(R.id.table_forecast);
+
+
+
+        try {
+
+            for(int i = 0; i < 9; i++){
+                createTitle(weatherForecastReader.getDay(i), table);
+                createLabel(weatherForecastReader.getText(i), table);
+                createLabel(weatherForecastReader.getDate(i), table);
+                createLabel(weatherForecastReader.getHigh(i), table);
+                createLabel(weatherForecastReader.getLow(i), table);
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return v;
+    }
+
+    void createTitle(String text, TableLayout table){
+        TableRow row = new TableRow(getContext());
+        TextView tv = new TextView(getContext());
+        tv.setText(text);
+
+        row.addView(tv);
+        table.addView(row);
+    }
+
+    void createLabel(String text, TableLayout table){
+        TableRow row = new TableRow(getContext());
+        EditText et = new EditText(getContext());
+        et.setText(text);
+
+        row.addView(et);
+        table.addView(row);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
