@@ -4,19 +4,27 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
+import com.example.przemek.astroweather.Weather.UnitFormatter;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
 import com.example.przemek.astroweather.Weather.WeatherForecastReader;
+import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
 
 import org.json.JSONException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -37,9 +45,10 @@ public class WeatherForecastFragment extends Fragment {
     private int page;
     private String title;
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
+
     private OnFragmentInteractionListener mListener;
 
     public WeatherForecastFragment() {
@@ -66,54 +75,102 @@ public class WeatherForecastFragment extends Fragment {
         }
     }
 
+    private Map <String, String> dayMap = new HashMap<>();
+
+    public void initDayMap(){
+        dayMap.put("Mon", "Monday");
+        dayMap.put("Tue", "Tuesday");
+        dayMap.put("Wed", "Wednesday");
+        dayMap.put("Thu", "Thursday");
+        dayMap.put("Fri", "Friday");
+        dayMap.put("Sat", "Saturday");
+        dayMap.put("Sun", "Sunday");
+    }
+
     View mView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_weather_forecast, container, false);
         mView = v;
-
-        WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
-        WeatherForecastReader weatherForecastReader = new WeatherForecastReader(weatherDataManager.getCurrentLocationJSON());
-
-        TableLayout table = v.findViewById(R.id.table_forecast);
-
-
+        initDayMap();
 
         try {
+            WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getContext());
+            WeatherForecastReader weatherForecastReader = new WeatherForecastReader(weatherDataManager.getCurrentLocationJSON());
 
-            for(int i = 0; i < 9; i++){
-                createTitle(weatherForecastReader.getDay(i), table);
-                createLabel(weatherForecastReader.getText(i), table);
-                createLabel(weatherForecastReader.getDate(i), table);
-                createLabel(weatherForecastReader.getHigh(i), table);
-                createLabel(weatherForecastReader.getLow(i), table);
+            TableLayout table = v.findViewById(R.id.table_forecast);
+
+
+            for (int i = 0; i < 9; i++) {
+                String day = dayMap.get(weatherForecastReader.getDay(i));
+                createTitle(day, table);
+                createContent("Description", weatherForecastReader.getText(i), table);
+                createContent("Date", weatherForecastReader.getDate(i), table);
+                createTemperatureContent(weatherForecastReader, i, table);
+                createTitle(" ", table);
             }
 
 
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+
         }
 
 
         return v;
     }
 
-    void createTitle(String text, TableLayout table){
+    void createTemperatureContent(WeatherForecastReader weatherForecastReader, int i, TableLayout table)
+            throws JSONException {
+
+        int minTemperature = Integer.parseInt(weatherForecastReader.getLow(i));
+        int maxTemperature = Integer.parseInt(weatherForecastReader.getHigh(i));
+        String minTemperatureStr, maxTemperatureStr;
+
+        if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.CELSIUS){
+            minTemperature = Math.round(UnitFormatter.convertFahrenheitToCelsius(minTemperature));
+            maxTemperature = Math.round(UnitFormatter.convertFahrenheitToCelsius(maxTemperature));
+
+            minTemperatureStr = UnitFormatter.getFormattedCelsius(minTemperature);
+            maxTemperatureStr = UnitFormatter.getFormattedCelsius(maxTemperature);
+
+        } else {
+            minTemperatureStr = UnitFormatter.getFormattedFahrenheit(minTemperature);
+            maxTemperatureStr = UnitFormatter.getFormattedFahrenheit(maxTemperature);
+
+        }
+        createContent("Temperature min", minTemperatureStr , table);
+        createContent("Temperature max", maxTemperatureStr, table);
+    }
+
+    void createTitle(String text, TableLayout table) {
         TableRow row = new TableRow(getContext());
         TextView tv = new TextView(getContext());
         tv.setText(text);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(32);
+
+
+
 
         row.addView(tv);
         table.addView(row);
     }
 
-    void createLabel(String text, TableLayout table){
+    void createContent(String titleText, String contentText, TableLayout table) {
         TableRow row = new TableRow(getContext());
-        EditText et = new EditText(getContext());
-        et.setText(text);
 
-        row.addView(et);
+        TextView title = new TextView(getContext());
+        titleText += ": ";
+        title.setText(titleText);
+
+        EditText content = new EditText(getContext());
+        content.setText(contentText);
+
+        row.addView(title);
+        row.addView(content);
         table.addView(row);
     }
 
