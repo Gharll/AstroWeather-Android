@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.R;
@@ -18,6 +19,7 @@ import com.example.przemek.astroweather.Weather.WeatherReader;
 import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
 
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 
 /**
@@ -78,7 +80,9 @@ public class WeatherBasicInfoFragment extends Fragment {
         mView = v;
 
 
-        EditText et_place = (EditText) v.findViewById(R.id.et_place);
+        TextView tv_place = (TextView) v.findViewById(R.id.tv_place);
+        TextView tv_text = (TextView) v.findViewById(R.id.tv_text);
+
         EditText et_temperature = (EditText) v.findViewById(R.id.et_temperature);
         EditText et_longitude = (EditText) v.findViewById(R.id.et_longitude);
         EditText et_latitude = (EditText) v.findViewById(R.id.et_latitude);
@@ -97,7 +101,8 @@ public class WeatherBasicInfoFragment extends Fragment {
 
         try {
             WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
-            et_place.setText(weatherReader.getCity() + ", " + weatherReader.getCountry());
+            tv_place.setText(weatherReader.getCity() + ", " + weatherReader.getCountry());
+            tv_text.setText(weatherReader.getText());
             et_longitude.setText(weatherReader.getLongitude());
             et_latitude.setText(weatherReader.getLatitude());
 

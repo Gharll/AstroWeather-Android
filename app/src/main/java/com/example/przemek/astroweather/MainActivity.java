@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
+import com.example.przemek.astroweather.CustomException.BadRangeException;
+import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -16,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
         configureActivity(R.id.btn_astro_weather, AstroWeatherActivity.class);
         configureActivity(R.id.btn_settings, SettingsActivity.class);
         configureActivity(R.id.btn_location, LocationActivity.class);
+
+        restoreData();
+
         handleExit();
     }
 
@@ -27,6 +34,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, activityClass));
             }
         });
+    }
+
+    private void restoreData(){
+        try {
+            AstroSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+            AstroSettingsStorage.restoreData();
+
+        } catch (BadRangeException e) {
+            e.printStackTrace();
+        }
+        WeatherSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+        WeatherSettingsStorage.restoreData();
     }
 
     private void handleExit(){

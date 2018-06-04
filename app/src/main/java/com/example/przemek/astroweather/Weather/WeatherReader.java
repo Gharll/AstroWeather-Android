@@ -78,4 +78,7 @@ public class WeatherReader {
         return channel.getJSONObject("atmosphere").getString("visibility");
     }
 
+    public String getText() throws JSONException{
+        return channel.getJSONObject("item").getJSONObject("condition").getString("text");
+    }
 }

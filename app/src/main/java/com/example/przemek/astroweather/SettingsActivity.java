@@ -35,13 +35,6 @@ public class SettingsActivity extends AppCompatActivity {
         init();
         saveAndExitHandle();
 
-
-        try {
-            AstroSettingsStorage.restoreData();
-        } catch (BadRangeException e) {
-
-        }
-
         showCurrentSettings();
     }
 
@@ -50,13 +43,16 @@ public class SettingsActivity extends AppCompatActivity {
     ArrayAdapter<String> temperatureAdapter;
 
     private void init() {
-        AstroSettingsStorage.mPrefs = getSharedPreferences("settings", 0);
+
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
         initFrequencySpinner();
         initTimeZoneSpinner();
         initTemperatureSpinner();
         initCurrentSettingsCord();
+
+        temperatureSpinner.setSelection(
+                temperatureAdapter.getPosition(WeatherSettingsStorage.getTemperature().name()));
     }
 
     private void initFrequencySpinner() {
@@ -118,6 +114,8 @@ public class SettingsActivity extends AppCompatActivity {
                     et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
                 }
                 saveWeatherSettings();
+
+                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
             }
         });
     }
@@ -133,15 +131,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         int inputTimeOffset = Integer.parseInt(timeZoneSpinner.getSelectedItem().toString());
         AstroSettingsStorage.setTimeZone(inputTimeOffset);
-
-        startActivity(new Intent(SettingsActivity.this, MainActivity.class));
-
         AstroSettingsStorage.saveData();
+
     }
 
     private void saveWeatherSettings() {
         String temperatureStr = temperatureSpinner.getSelectedItem().toString();
         WeatherSettingsStorage.setTemperature(TemperatureUnitEnum.valueOf(temperatureStr));
+        WeatherSettingsStorage.saveData();
     }
 
     private void showCurrentSettings() {
@@ -155,7 +152,7 @@ public class SettingsActivity extends AppCompatActivity {
                         String.valueOf(AstroSettingsStorage.getTimeZone())));
 
         temperatureSpinner.setSelection(
-                temperatureAdapter.getPosition(WeatherSettingsStorage.getTemperature().toString())
+                temperatureAdapter.getPosition(WeatherSettingsStorage.getTemperature().name())
         );
     }
 

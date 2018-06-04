@@ -11,7 +11,6 @@ import com.example.przemek.astroweather.CustomException.BadRangeException;
 
 public class AstroSettingsStorage {
 
-    private static AstroSettingsStorage settingsStorage = null;
     private static double longitude = 51.7537150;
     private static double latitude = 19.4517180;
     private static Integer dataFrequencyRefresh = 1;
