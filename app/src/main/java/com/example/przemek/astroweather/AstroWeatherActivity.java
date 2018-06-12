@@ -82,10 +82,6 @@ public class AstroWeatherActivity extends AppCompatActivity
 
     }
 
-    private static String makeFragmentName(int viewId, long id) {
-        return "android:switcher:" + viewId + ":" + id;
-    }
-
     private void currentTimeAndDataInit() {
         new Thread() {
             @Override
@@ -131,5 +127,6 @@ public class AstroWeatherActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 
 }

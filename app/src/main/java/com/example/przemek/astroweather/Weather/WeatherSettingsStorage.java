@@ -11,6 +11,7 @@ import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 public class WeatherSettingsStorage {
 
     public static SharedPreferences mPrefs;
+    private static int expiredDateTimeSeconds = 10;
 
     private WeatherSettingsStorage(){
 
@@ -34,6 +35,10 @@ public class WeatherSettingsStorage {
     public static void saveData(){
         SharedPreferences.Editor mEditor = mPrefs.edit();
         mEditor.putString("Temperature", temperature.name()).commit();
+    }
+
+    public static int getExpiredDateTimeSeconds(){
+        return expiredDateTimeSeconds;
     }
 
 

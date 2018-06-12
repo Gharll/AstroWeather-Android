@@ -13,6 +13,7 @@ import com.example.przemek.astroweather.CustomException.LocationNotExistsExcepti
 import com.example.przemek.astroweather.R;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
 import com.example.przemek.astroweather.Weather.WeatherReader;
+import com.example.przemek.astroweather.Weather.WeatherUnit;
 
 import org.json.JSONException;
 
@@ -88,10 +89,10 @@ public class WeatherAdditionalInfoFragment extends Fragment {
 
         try {
             WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
-            et_wind_strength.setText(weatherReader.getWindStrength());
-            et_wind_direction.setText(weatherReader.getWindDirection());
+            et_wind_strength.setText(weatherReader.getWindStrength() + " " + WeatherUnit.SPEED);
+            et_wind_direction.setText(weatherReader.getWindDirection() + " " + WeatherUnit.DEGREE);
             et_humidity.setText(weatherReader.getHumidity());
-            et_visibility.setText(weatherReader.getVisibility());
+            et_visibility.setText(weatherReader.getVisibility() + " " + WeatherUnit.DISTANCE);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch(NullPointerException e){

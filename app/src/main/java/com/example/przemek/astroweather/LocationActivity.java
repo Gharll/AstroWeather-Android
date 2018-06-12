@@ -9,6 +9,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
+import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.CustomException.LocationAlreadyExists;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.Weather.DAO.WeatherDataEntity;
@@ -53,6 +55,10 @@ public class LocationActivity extends AppCompatActivity {
                     WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
                     createRowLocation(weatherReader.getCity(), table, et_current_location);
                     et_current_location.setText(weatherDataManager.getCurrentLocation().getCity());
+
+                    AstroSettingsStorage.setLatitude(Double.parseDouble(weatherReader.getLatitude()));
+                    AstroSettingsStorage.setLongitude(Double.parseDouble(weatherReader.getLongitude()));
+
                 } catch (LocationNotExistsException e) {
                     error_message.setVisibility(View.VISIBLE);
                     error_message.setText(e.getMessage());
@@ -61,6 +67,8 @@ public class LocationActivity extends AppCompatActivity {
                 } catch (LocationAlreadyExists e) {
                     error_message.setVisibility(View.VISIBLE);
                     error_message.setText(e.getMessage());
+                } catch (BadRangeException e) {
+                    e.printStackTrace();
                 }
 
                 et_new_location.setText("");
@@ -99,6 +107,12 @@ public class LocationActivity extends AppCompatActivity {
                 WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
                 tl.removeView(row);
                 weatherDataManager.deleteStoredLocation(name);
+
+                List <WeatherDataEntity> weatherDataEntities  = weatherDataManager.getAll();
+                if(weatherDataEntities.size() != 0){
+                    WeatherDataEntity weatherDataEntity = weatherDataEntities.get(0);
+                    weatherDataManager.setCurrentLocation(weatherDataEntity.getCity());
+                }
                 updateCurrentLocationText(current_location);
             }
         });

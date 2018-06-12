@@ -9,14 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.example.przemek.astroweather.R;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
-import com.example.przemek.astroweather.Weather.UnitFormatter;
+import com.example.przemek.astroweather.Weather.WeatherUnit;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
 import com.example.przemek.astroweather.Weather.WeatherForecastReader;
 import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
@@ -130,15 +129,15 @@ public class WeatherForecastFragment extends Fragment {
         String minTemperatureStr, maxTemperatureStr;
 
         if(WeatherSettingsStorage.getTemperature() == TemperatureUnitEnum.CELSIUS){
-            minTemperature = Math.round(UnitFormatter.convertFahrenheitToCelsius(minTemperature));
-            maxTemperature = Math.round(UnitFormatter.convertFahrenheitToCelsius(maxTemperature));
+            minTemperature = Math.round(WeatherUnit.convertFahrenheitToCelsius(minTemperature));
+            maxTemperature = Math.round(WeatherUnit.convertFahrenheitToCelsius(maxTemperature));
 
-            minTemperatureStr = UnitFormatter.getFormattedCelsius(minTemperature);
-            maxTemperatureStr = UnitFormatter.getFormattedCelsius(maxTemperature);
+            minTemperatureStr = WeatherUnit.getFormattedCelsius(minTemperature);
+            maxTemperatureStr = WeatherUnit.getFormattedCelsius(maxTemperature);
 
         } else {
-            minTemperatureStr = UnitFormatter.getFormattedFahrenheit(minTemperature);
-            maxTemperatureStr = UnitFormatter.getFormattedFahrenheit(maxTemperature);
+            minTemperatureStr = WeatherUnit.getFormattedFahrenheit(minTemperature);
+            maxTemperatureStr = WeatherUnit.getFormattedFahrenheit(maxTemperature);
 
         }
         createContent("Temperature min", minTemperatureStr , table);

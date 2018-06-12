@@ -1,6 +1,7 @@
 package com.example.przemek.astroweather.Weather;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.przemek.astroweather.CustomException.LocationAlreadyExists;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
@@ -12,6 +13,7 @@ import com.example.przemek.astroweather.Weather.DAO.WeatherDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -72,6 +74,14 @@ public class WeatherDataManager {
             throw new LocationAlreadyExists(city);
         }
 
+        return downloadAndStoreCity(city);
+
+    }
+
+    public String downloadAndStoreCity(String city) throws LocationNotExistsException {
+
+
+
         JSONObject weatherJSON = null;
         try {
             weatherJSON = new WeatherDownloader().execute(city).get();
@@ -86,19 +96,27 @@ public class WeatherDataManager {
         }
 
         WeatherReader weatherReader = new WeatherReader(weatherJSON);
-        WeatherDataEntity weatherData = new WeatherDataEntity();
-        String cityName = "error";
+
+        String cityName = null;
         try {
-           cityName = weatherReader.getCity();
+            cityName = weatherReader.getCity();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        weatherData.setCity(cityName);
-        weatherData.setRawJson(weatherJSON.toString());
-        weatherDataDAO.insertWeatherData(weatherData);
+
+        Date date = new Date();
+        WeatherDataEntity weatherDataEntity = weatherDataDAO.findWeatherDataByCity(city);
+        if(weatherDataEntity != null){
+            weatherDataEntity.setRawJson(weatherJSON.toString());
+            weatherDataEntity.setDatetime(WeatherDate.format(date));
+            weatherDataDAO.updateWeatherData(weatherDataEntity);
+        } else {
+
+            WeatherDataEntity weatherData = new WeatherDataEntity(cityName, WeatherDate.format(date), weatherJSON.toString());
+            weatherDataDAO.insertWeatherData(weatherData);
+        }
 
         return cityName;
-
     }
 
     public void deleteStoredLocation(String city){
@@ -114,11 +132,21 @@ public class WeatherDataManager {
             return null;
         }
 
+        String currentCity = weatherDataDAO.getCurrentLocation().getCity();
         WeatherDataEntity weatherDataEntity =
-                weatherDataDAO.findWeatherDataByCity(weatherDataDAO.getCurrentLocation().getCity());
+                weatherDataDAO.findWeatherDataByCity(currentCity);
 
-        //check is update
-        //if no download from downloader
+        if(WeatherDate.checkIsUpdate(WeatherDate.parse(weatherDataEntity.getDatetime()))){
+            try {
+                Log.v("MyDebug:", "Download new data");
+                downloadAndStoreCity(currentCity);
+            } catch (LocationNotExistsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        weatherDataEntity =
+                weatherDataDAO.findWeatherDataByCity(currentCity);
 
         try {
             weatherJSON = new JSONObject(weatherDataEntity.getRawJson());
@@ -137,4 +165,5 @@ public class WeatherDataManager {
     public List<WeatherDataEntity> getAll(){
         return weatherDataDAO.getAllWeatherData();
     }
+
 }

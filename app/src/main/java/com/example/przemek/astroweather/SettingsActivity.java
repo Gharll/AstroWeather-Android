@@ -12,12 +12,15 @@ import android.widget.Toast;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
+import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
 import com.example.przemek.astroweather.Weather.WeatherReader;
 import com.example.przemek.astroweather.Weather.WeatherSettingsStorage;
 
 import org.json.JSONException;
+
+import java.text.ParseException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -26,7 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner frequencySpinner;
     private Spinner timeZoneSpinner;
     private Spinner temperatureSpinner;
-
+    private WeatherDataManager weatherDataManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +49,36 @@ public class SettingsActivity extends AppCompatActivity {
 
         et_longitude = (EditText) findViewById(R.id.et_longitude);
         et_latitude = (EditText) findViewById(R.id.et_latitude);
+        weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
         initFrequencySpinner();
         initTimeZoneSpinner();
         initTemperatureSpinner();
         initCurrentSettingsCord();
+        initWeatherUpdateData();
 
         temperatureSpinner.setSelection(
                 temperatureAdapter.getPosition(WeatherSettingsStorage.getTemperature().name()));
+    }
+
+    private void initWeatherUpdateData(){
+        Button button = findViewById(R.id.btn_weather_update_data);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String city = weatherDataManager.getCurrentLocation().getCity();
+                    weatherDataManager.downloadAndStoreCity(city);
+
+                    Toast.makeText(SettingsActivity.this, "Downloaded data for " + city.toUpperCase(),
+                            Toast.LENGTH_LONG).show();
+                } catch (LocationNotExistsException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e){
+                    ;
+                }
+            }
+        });
+
     }
 
     private void initFrequencySpinner() {
@@ -107,15 +133,15 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     saveAstroSettings();
+                    saveWeatherSettings();
+                    startActivity(new Intent(SettingsActivity.this, MainActivity.class));
                 } catch (BadRangeException e) {
                     Toast.makeText(SettingsActivity.this, "Bad range: " + e.getMessage(),
                             Toast.LENGTH_LONG).show();
                     et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
                     et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
                 }
-                saveWeatherSettings();
 
-                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
             }
         });
     }
@@ -142,8 +168,17 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showCurrentSettings() {
-        et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
-        et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));
+       /* et_longitude.setText(String.valueOf(AstroSettingsStorage.getLongitude()));
+        et_latitude.setText(String.valueOf(AstroSettingsStorage.getLatitude()));*/
+
+        try {
+            et_longitude.setText(AstroSettingsStorage.getFormattedLongitude());
+            et_latitude.setText(AstroSettingsStorage.getFormattedLatitude());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
         frequencySpinner.setSelection(
                 frequencyAdapter.getPosition(
                         String.valueOf(AstroSettingsStorage.getDataFrequencyRefresh())));
@@ -176,4 +211,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

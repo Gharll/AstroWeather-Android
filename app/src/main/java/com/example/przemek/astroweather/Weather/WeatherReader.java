@@ -5,6 +5,9 @@ import com.example.przemek.astroweather.CustomException.LocationNotExistsExcepti
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -15,11 +18,6 @@ public class WeatherReader {
 
     private JSONObject weatherJSON;
     private JSONObject channel;
-
-
-    public WeatherReader(){
-
-    }
 
     public WeatherReader(JSONObject weatherJSON){
         setWeatherJSON(weatherJSON);
@@ -80,5 +78,9 @@ public class WeatherReader {
 
     public String getText() throws JSONException{
         return channel.getJSONObject("item").getJSONObject("condition").getString("text");
+    }
+
+    public String getCreatedDate() throws JSONException{
+        return weatherJSON.getString( "created");
     }
 }

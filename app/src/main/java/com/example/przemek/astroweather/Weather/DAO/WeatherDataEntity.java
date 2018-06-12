@@ -12,14 +12,22 @@ import android.arch.persistence.room.PrimaryKey;
 public class WeatherDataEntity {
 
     @PrimaryKey(autoGenerate = true)
-    public long id;
+    private long id;
 
     @ColumnInfo(name = "city")
-    public String city;
+    private String city;
+
+    @ColumnInfo(name = "datetime")
+    private String datetime;
 
     @ColumnInfo(name = "raw_json")
-    public String rawJson;
+    private String rawJson;
 
+    public WeatherDataEntity(String city, String datetime, String rawJson){
+        this.city = city;
+        this.datetime = datetime;
+        this.rawJson = rawJson;
+    }
 
     public long getId() {
         return id;
@@ -35,6 +43,14 @@ public class WeatherDataEntity {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
     }
 
     public String getRawJson() {

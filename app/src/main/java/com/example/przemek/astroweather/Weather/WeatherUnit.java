@@ -4,11 +4,14 @@ package com.example.przemek.astroweather.Weather;
  * Created by Przemek on 28.05.2018.
  */
 
-public class UnitFormatter {
+public class WeatherUnit {
 
-    private static final String DEGREE  = "\u00b0";
+    public static final String DISTANCE = "miles";
+    public static final String PRESSURE = "in";
+    public static final String SPEED = "mph";
+    public static final String DEGREE  = "\u00b0";
 
-    private UnitFormatter(){
+    private WeatherUnit(){
 
     }
 
