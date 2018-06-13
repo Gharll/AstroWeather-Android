@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.SettingsActivity;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
 import com.example.przemek.astroweather.Weather.WeatherReader;
 import com.example.przemek.astroweather.Weather.WeatherUnit;

@@ -3,6 +3,7 @@ package com.example.przemek.astroweather.Weather;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.CustomException.LocationAlreadyExists;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.Weather.DAO.CurrentLocationEntity;
@@ -16,6 +17,8 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Przemek on 31.05.2018.
@@ -54,10 +57,12 @@ public class WeatherDataManager {
         }
 
         weatherDataEntity = weatherDataDAO.findWeatherDataByCity(currentLocation);
-        CurrentLocationEntity currentLocationEntity = new CurrentLocationEntity();
-        long id = weatherDataEntity.getId();
-        currentLocationEntity.setWeatherDataID(id);
-        weatherDataDAO.insertCurrentLocation(currentLocationEntity);
+        if(weatherDataEntity != null){
+            CurrentLocationEntity currentLocationEntity = new CurrentLocationEntity();
+            long id = weatherDataEntity.getId();
+            currentLocationEntity.setWeatherDataID(id);
+            weatherDataDAO.insertCurrentLocation(currentLocationEntity);
+        }
 
     }
 
@@ -66,7 +71,7 @@ public class WeatherDataManager {
     }
 
     public String storeCityAndGetFormatedName(String city)
-            throws LocationNotExistsException, LocationAlreadyExists {
+            throws LocationNotExistsException, LocationAlreadyExists, InternetConnectionException {
 
 
         WeatherDataEntity weatherDataEntity = weatherDataDAO.findWeatherDataByCity(city);
@@ -78,45 +83,51 @@ public class WeatherDataManager {
 
     }
 
-    public String downloadAndStoreCity(String city) throws LocationNotExistsException {
-
-
+    public String downloadAndStoreCity(String city) throws LocationNotExistsException, InternetConnectionException {
 
         JSONObject weatherJSON = null;
         try {
-            weatherJSON = new WeatherDownloader().execute(city).get();
+
+            try{
+                weatherJSON = new WeatherDownloader().execute(city).get(2, TimeUnit.SECONDS);
+            }catch (TimeoutException e) {
+                throw new InternetConnectionException();
+            }
+
+
+            if (weatherJSON.isNull("results")){
+                throw new LocationNotExistsException(city);
+            }
+
+            WeatherReader weatherReader = new WeatherReader(weatherJSON);
+
+            String cityName = null;
+            try {
+                cityName = weatherReader.getCity();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Date date = new Date();
+            WeatherDataEntity weatherDataEntity = weatherDataDAO.findWeatherDataByCity(city);
+            if(weatherDataEntity != null){
+                weatherDataEntity.setRawJson(weatherJSON.toString());
+                weatherDataEntity.setDatetime(WeatherDate.format(date));
+                weatherDataDAO.updateWeatherData(weatherDataEntity);
+            } else {
+
+                WeatherDataEntity weatherData = new WeatherDataEntity(cityName, WeatherDate.format(date), weatherJSON.toString());
+                weatherDataDAO.insertWeatherData(weatherData);
+            }
+
+            return cityName;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        if (weatherJSON.isNull("results")){
-            throw new LocationNotExistsException(city);
-        }
-
-        WeatherReader weatherReader = new WeatherReader(weatherJSON);
-
-        String cityName = null;
-        try {
-            cityName = weatherReader.getCity();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Date date = new Date();
-        WeatherDataEntity weatherDataEntity = weatherDataDAO.findWeatherDataByCity(city);
-        if(weatherDataEntity != null){
-            weatherDataEntity.setRawJson(weatherJSON.toString());
-            weatherDataEntity.setDatetime(WeatherDate.format(date));
-            weatherDataDAO.updateWeatherData(weatherDataEntity);
-        } else {
-
-            WeatherDataEntity weatherData = new WeatherDataEntity(cityName, WeatherDate.format(date), weatherJSON.toString());
-            weatherDataDAO.insertWeatherData(weatherData);
-        }
-
-        return cityName;
+       return null;
     }
 
     public void deleteStoredLocation(String city){
@@ -142,6 +153,8 @@ public class WeatherDataManager {
                 downloadAndStoreCity(currentCity);
             } catch (LocationNotExistsException e) {
                 e.printStackTrace();
+            } catch (InternetConnectionException e){
+
             }
         }
 

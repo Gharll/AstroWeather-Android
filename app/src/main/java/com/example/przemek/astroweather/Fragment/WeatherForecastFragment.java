@@ -12,7 +12,9 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.R;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.WeatherUnit;
@@ -116,7 +118,6 @@ public class WeatherForecastFragment extends Fragment {
         } catch (NullPointerException e) {
 
         }
-
 
         return v;
     }

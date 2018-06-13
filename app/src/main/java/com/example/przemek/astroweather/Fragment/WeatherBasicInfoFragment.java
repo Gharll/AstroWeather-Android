@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.R;
+import com.example.przemek.astroweather.SettingsActivity;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.WeatherUnit;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
@@ -98,7 +101,11 @@ public class WeatherBasicInfoFragment extends Fragment {
         }*/
 
         try {
-            WeatherReader weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+
+            WeatherReader weatherReader = null;
+
+            weatherReader = new WeatherReader(weatherDataManager.getCurrentLocationJSON());
+
             tv_place.setText(weatherReader.getCity() + ", " + weatherReader.getCountry());
             tv_text.setText(weatherReader.getText());
             et_longitude.setText(weatherReader.getLongitude());

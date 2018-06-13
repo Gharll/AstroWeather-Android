@@ -8,13 +8,16 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
 import com.example.przemek.astroweather.CustomException.BadRangeException;
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.CustomException.LocationAlreadyExists;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.Weather.DAO.WeatherDataEntity;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
+import com.example.przemek.astroweather.Weather.WeatherDownloader;
 import com.example.przemek.astroweather.Weather.WeatherReader;
 
 import org.json.JSONException;
@@ -41,13 +44,16 @@ public class LocationActivity extends AppCompatActivity {
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                error_message.setVisibility(View.INVISIBLE);
-                String userInput = et_new_location.getText().toString();
-
-                WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
-                //weatherDataManager.setCurrentLocation(userInput);
-
                 try {
+
+
+                    error_message.setVisibility(View.INVISIBLE);
+                    String userInput = et_new_location.getText().toString();
+
+                    WeatherDataManager weatherDataManager = WeatherDataManager.getInstance(getApplicationContext());
+                    //weatherDataManager.setCurrentLocation(userInput);
+
+
                     String cityName = weatherDataManager.storeCityAndGetFormatedName(userInput);
                     weatherDataManager.setCurrentLocation(cityName);
 
@@ -69,8 +75,10 @@ public class LocationActivity extends AppCompatActivity {
                     error_message.setText(e.getMessage());
                 } catch (BadRangeException e) {
                     e.printStackTrace();
+                } catch (InternetConnectionException e) {
+                    Toast.makeText(LocationActivity.this, e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
-
                 et_new_location.setText("");
             }
         });

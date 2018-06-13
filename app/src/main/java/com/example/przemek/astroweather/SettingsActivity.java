@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 import com.example.przemek.astroweather.Astro.AstroSettingsStorage;
+import com.example.przemek.astroweather.CustomException.InternetConnectionException;
 import com.example.przemek.astroweather.CustomException.LocationNotExistsException;
 import com.example.przemek.astroweather.Weather.TemperatureUnitEnum;
 import com.example.przemek.astroweather.Weather.WeatherDataManager;
@@ -75,6 +76,9 @@ public class SettingsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (NullPointerException e){
                     ;
+                } catch (InternetConnectionException e) {
+                    Toast.makeText(SettingsActivity.this, e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });

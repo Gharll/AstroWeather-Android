@@ -38,7 +38,7 @@ public class WeatherDate {
 
         Calendar checkingDate = Calendar.getInstance();
         checkingDate.setTime(date);
-        checkingDate.add(Calendar.SECOND, WeatherSettingsStorage.getExpiredDateTimeSeconds());
+        checkingDate.add(Calendar.SECOND, WeatherSettingsStorage.expiredDataTimeSeconds);
 
         Log.v("NOW:", now.toString());
         Log.v("CHECK", checkingDate.toString());
