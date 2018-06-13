@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import com.example.przemek.astroweather.CustomException.BadRangeException;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 
 /**
@@ -35,12 +37,15 @@ public class AstroSettingsStorage {
     private static DecimalFormat cordFormat = new DecimalFormat("#.######");
 
     private AstroSettingsStorage(){
-
     }
 
     public static SharedPreferences mPrefs;
 
     public static void restoreData() throws BadRangeException{
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.GERMAN);
+        otherSymbols.setDecimalSeparator('.');
+        cordFormat = new DecimalFormat("#.######", otherSymbols);
+
         AstroSettingsStorage.setLongitude(
                 Double.parseDouble(mPrefs.getString("longitude", String.valueOf(defaultLongitude))));
         AstroSettingsStorage.setLatitude(

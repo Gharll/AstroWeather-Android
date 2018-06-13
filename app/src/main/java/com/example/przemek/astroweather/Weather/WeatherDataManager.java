@@ -90,14 +90,19 @@ public class WeatherDataManager {
 
             try{
                 weatherJSON = new WeatherDownloader().execute(city).get(2, TimeUnit.SECONDS);
+
+                if (weatherJSON.isNull("results")){
+                    throw new LocationNotExistsException(city);
+                }
+
             }catch (TimeoutException e) {
+                throw new InternetConnectionException();
+            } catch (NullPointerException e){
                 throw new InternetConnectionException();
             }
 
 
-            if (weatherJSON.isNull("results")){
-                throw new LocationNotExistsException(city);
-            }
+
 
             WeatherReader weatherReader = new WeatherReader(weatherJSON);
 
